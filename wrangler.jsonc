@@ -2,5 +2,17 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "stacyjo",
   "pages_build_output_dir": "./dist",
-  "compatibility_date": "2026-10-13"
+  "compatibility_date": "2026-10-13",
+  "r2_buckets": [
+    {
+      "binding": "DOWNLOADS",
+      "bucket_name": "stacyjo-downloads"
+    }
+  ],
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "allowed_sender_addresses": ["hello@stacyjo.com"]
+    }
+  ]
 }

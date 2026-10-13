@@ -49,7 +49,15 @@ Paste each product’s Payment Link into `products.ebook.checkoutUrl` and `produ
 
 The book details on the home page (chapters, drills, problem-to-fix cards, quotes, 7-day plan, audiobook tracks) live in `src/data/book.ts`. Edit them there and the page updates everywhere.
 
-Both live Payment Links already send buyers to `https://stacyjo.com/thank-you` after payment.
+Both live Payment Links send buyers to `https://stacyjo.com/thank-you?session_id={CHECKOUT_SESSION_ID}`. That page checks the payment with Stripe, then offers the PDF (and the audiobook tracks, for the bundle). The same links are emailed from hello@stacyjo.com.
+
+Paid files live in the private R2 bucket `stacyjo-downloads`. They are not in this repository.
+
+In Stripe, add a webhook endpoint for `checkout.session.completed`:
+
+`https://stacyjo.com/api/stripe-webhook`
+
+Put its signing secret in the Pages project as `STRIPE_WEBHOOK_SECRET`. `STRIPE_SECRET_KEY` is already set. The thank-you page still sends the email if the webhook is not in place yet.
 
 ## Kit (free chapter signup)
 

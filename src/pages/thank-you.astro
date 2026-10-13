@@ -5,8 +5,13 @@ import { site, referral, youtube, isSet } from '../config';
 <Base title="Thank You | Stacy Jo" description="Thank you for your order." noindex>
   <section class="band band--mist">
     <div class="wrap measure-wrap">
-      <h1>Thank you! Your book is on its way.</h1>
-      <p class="lead">Your download link is in your inbox (and on the receipt screen). If you don’t see it in a few minutes, check spam or promotions, or email <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+      <h1>Thank you! Your book is ready.</h1>
+      <div id="delivery" aria-live="polite">
+        <p class="lead" id="delivery-lead">Your download links load here when you arrive from checkout.</p>
+      </div>
+      <noscript>
+        <p>Turn on JavaScript to load your downloads, or email <a href={`mailto:${site.email}`}>{site.email}</a> with your Stripe receipt and we will send them.</p>
+      </noscript>
       <ol class="steps">
         <li><strong>Start with the 7-Day Calm Together Plan</strong> at the back of the book: one small step a day.</li>
         {isSet(referral.sparkloopUrl) && (
@@ -17,9 +22,49 @@ import { site, referral, youtube, isSet } from '../config';
     </div>
   </section>
 </Base>
+<script is:inline>
+  (() => {
+    const lead = document.getElementById('delivery-lead');
+    const root = document.getElementById('delivery');
+    const sessionId = new URLSearchParams(location.search).get('session_id');
+    if (!sessionId) {
+      lead.textContent = 'Use the button on the Stripe receipt to come back here. Your downloads show up on this page, and we email the same links. If you are stuck, email hello@stacyjo.com.';
+      return;
+    }
+    lead.textContent = 'Getting your downloads…';
+    fetch('/api/order?session_id=' + encodeURIComponent(sessionId))
+      .then((response) => response.json().then((body) => ({ ok: response.ok, body })))
+      .then(({ ok, body }) => {
+        if (!ok) {
+          lead.textContent = body.error || 'We could not confirm this payment. Email hello@stacyjo.com.';
+          return;
+        }
+        const sent = body.emailSent && body.email
+          ? ' We also emailed them to ' + body.email + '.'
+          : ' Save this page. If the email does not arrive, these links are your copy.';
+        lead.textContent = 'Your files are below.' + sent;
+        const list = document.createElement('ul');
+        list.className = 'downloads';
+        for (const file of body.files) {
+          const item = document.createElement('li');
+          const link = document.createElement('a');
+          link.href = file.url;
+          link.textContent = file.name;
+          item.append(link);
+          list.append(item);
+        }
+        root.append(list);
+      })
+      .catch(() => {
+        lead.textContent = 'We could not load your downloads. Email hello@stacyjo.com and we will send them.';
+      });
+  })();
+</script>
 <style>
   .measure-wrap { max-width: 44rem; }
   h1 { font-size: clamp(2.1rem, 5vw, 3.2rem); }
+  .downloads { list-style: none; margin: 1.25rem 0 0; padding: 0; display: grid; gap: 0.65rem; }
+  .downloads a { font-family: var(--sans); font-weight: 600; }
   .steps { margin: 2rem 0 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 1.5rem; }
   .steps li { counter-increment: s; position: relative; padding-left: 3.25rem; }
   .steps li::before { content: counter(s); position: absolute; left: 0; top: -0.1rem; width: 2.25rem; height: 2.25rem; display: grid; place-items: center; border-radius: 50%; background: var(--navy); color: var(--white); font-family: var(--sans); font-weight: 700; }
