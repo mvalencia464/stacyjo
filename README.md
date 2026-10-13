@@ -43,7 +43,7 @@ Local JPG copies in `public/images/` are used automatically if R2 can't be reach
 
 Paste each product’s Payment Link into `products.ebook.checkoutUrl` and `products.bundle.checkoutUrl`. The buttons go straight to Stripe Checkout.
 
-On each Payment Link, set the confirmation redirect to `https://stacyjo.com/thank-you` so buyers land on the thank-you page after payment. The links in config right now are Stripe test links.
+Both live Payment Links already send buyers to `https://stacyjo.com/thank-you` after payment.
 
 ## Kit (free chapter signup)
 

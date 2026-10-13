@@ -31,12 +31,12 @@ export const products = {
   ebook: {
     name: 'Ebook',
     price: 19,
-    checkoutUrl: 'https://buy.stripe.com/test_bJecN6etraF0ep4aAadfG00',
+    checkoutUrl: 'https://buy.stripe.com/5kQ8wQ3LG0zRcLi3AH2VG00',
   },
   bundle: {
     name: 'Ebook + Audiobook',
     price: 29,
-    checkoutUrl: 'https://buy.stripe.com/test_00w6oI9974gC4OueQqdfG01',
+    checkoutUrl: 'https://buy.stripe.com/3cI3cwgysdmD3aI0ov2VG01',
   },
 };
 
