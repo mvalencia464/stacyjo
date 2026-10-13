@@ -59,6 +59,8 @@ In Stripe, add a webhook endpoint for `checkout.session.completed`:
 
 Put its signing secret in the Pages project as `STRIPE_WEBHOOK_SECRET`. `STRIPE_SECRET_KEY` is already set. The thank-you page still sends the email if the webhook is not in place yet.
 
+Pages config cannot declare an email binding, so add it in the Pages project: Settings, Bindings, Email, variable name `EMAIL`, allowed sender `hello@stacyjo.com`. Downloads still appear on the thank-you page if that binding is missing.
+
 ## Kit (free chapter signup)
 
 1. Create a form called **Free Chapter**. Set its incentive email to deliver `The-Leash-Goes-Both-Ways-Free-Chapter.pdf`.
