@@ -169,7 +169,7 @@ Sections in order. Copy is final unless marked `{{…}}`.
 ### 6.3 Hero (full-bleed `--teal-cover`)
 
 - Eyebrow: **New book by Stacy Jo**
-- H1: **Your dog feels what you feel.** *(line break)* **Calm does too.** ("Calm does too." in yellow)
+- H1: **Your dog feels your stress.** *(line break)* **And your calm.** ("And your calm." in yellow)
 - Subhead: *The Leash Goes Both Ways* is a calm-first method for the stress loop between you and your dog, so walks, guests, and everyday life get easier for both of you.
 - Buttons: **Get the book: $19** (BuyButton → ebook) · **Read a free chapter** (secondary → `/free-chapter`)
 - Fine print: Instant PDF download · 14-day money-back guarantee
