@@ -1,0 +1,7 @@
+---
+import { checkoutHref, products } from '../config';
+interface Props { product: keyof typeof products; variant?: 'primary' | 'yellow' | 'outline' | 'ghost'; class?: string }
+const { product, variant = 'primary', class: cls = '' } = Astro.props;
+const { href, live } = checkoutHref(product);
+---
+<a href={href} class:list={['btn', `btn--${variant}`, live && 'lemonsqueezy-button', cls]} data-product={product}><slot /></a>

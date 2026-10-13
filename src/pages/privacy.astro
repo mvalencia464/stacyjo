@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, legal } from '../config';
+---
+<Base title="Privacy | Stacy Jo" description="How stacyjo.com handles your information.">
+  <section class="band"><div class="wrap prose">
+    <h1>Privacy</h1>
+    <p class="fine">Last updated: {legal.updated}</p>
+    <h2>Who we are</h2>
+    <p>This site is run by Stacy Jo (stacyjo.com). Questions: <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+    <h2>What we collect</h2>
+    <p>Your email address (and first name, if you give it) when you sign up for the free chapter or emails, and purchase details when you buy. We never see or store payment card numbers: Lemon Squeezy handles payments as the merchant of record.</p>
+    <h2>How we use it</h2>
+    <p>To deliver what you asked for, send emails you signed up for, answer support questions, and improve the site.</p>
+    <h2>Service providers</h2>
+    <ul>
+      <li>Lemon Squeezy: checkout, payments, and file delivery</li>
+      <li>Kit: email delivery</li>
+      <li>{legal.hosting}: website hosting and image delivery</li>
+      <li>{legal.analytics ? `${legal.analytics}: privacy-friendly, cookieless analytics` : 'No analytics or advertising cookies are used on this site.'}</li>
+    </ul>
+    <p>Each provider processes data under its own privacy policy. We don’t sell your information.</p>
+    <h2>Your choices</h2>
+    <p>Unsubscribe from any email with one click. To see or delete the information we hold about you, email <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+    <h2>Children</h2>
+    <p>This site isn’t directed to children under 13.</p>
+    <h2>Changes</h2>
+    <p>If this policy changes, we’ll update this page and the date above.</p>
+  </div></section>
+</Base>

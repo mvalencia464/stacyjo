@@ -1,0 +1,16 @@
+---
+import { launch, isSet } from '../config';
+---
+{launch.active && (
+  <div class="launch" role="note">
+    <p>
+      Launch week: use code <strong>{launch.code}</strong> for ${launch.amountOff} off{isSet(launch.endsLabel) && <> until {launch.endsLabel}</>}.
+      <a href="/#pricing">Get the book</a>
+    </p>
+  </div>
+)}
+<style>
+  .launch { background: var(--yellow); color: var(--ink); font-family: var(--sans); font-size: 0.92rem; text-align: center; padding: 0.6rem 1rem; padding-top: calc(0.6rem + env(safe-area-inset-top, 0px)); }
+  .launch p { margin: 0; }
+  .launch a { color: var(--ink); font-weight: 600; margin-left: 0.4rem; }
+</style>

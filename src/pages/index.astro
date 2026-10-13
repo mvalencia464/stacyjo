@@ -1,0 +1,358 @@
+---
+import Base from '../layouts/Base.astro';
+import BuyButton from '../components/BuyButton.astro';
+import Picture from '../components/Picture.astro';
+import LoopDiagram from '../components/LoopDiagram.astro';
+import { site, media, book, products, launch, socials, youtube, dogs, isSet, price } from '../config';
+
+const pillars = [
+  ['Regulate', 'Calm yourself first, then train. Thresholds, triggers, and teaching your dog to switch off.'],
+  ['Understand', 'The quiet stress signals most owners miss, and what your own body is saying back.'],
+  ['Bond', 'Consent, play, and nail trims without the wrestling match.'],
+  ['Move', 'The sniffari, and the end of the leash tug-of-war.'],
+  ['Nourish', 'Food, comfort, routine, and easing resource guarding.'],
+  ['Live', 'The TRIP framework, real-world manners, and multi-dog homes.'],
+];
+
+const scale = [
+  { when: 'Seconds', what: 'Heart rhythm', text: 'Dogs’ and owners’ heart rhythms can line up, especially during quiet rest together, and the effect grows the longer they’ve lived together.' },
+  { when: 'Minutes', what: 'Bonding hormones', text: 'In a 2015 study, mutual gazing between dogs and owners raised oxytocin, the “bonding hormone,” in both.' },
+  { when: 'Months', what: 'Stress hormones', text: 'In a 2019 study of 58 dogs and their owners, long-term stress levels measured in hair tended to rise and fall together.' },
+];
+
+const sources = [
+  ['Sundman et al., 2019, Scientific Reports', 'https://liu.se/en/news-item/hunden-speglar-agarens-stress'],
+  ['Nagasawa et al., 2015, Science', 'https://carta.anthropogeny.org/node/308531'],
+  ['Katayama et al., 2019, Frontiers in Psychology', 'https://www.frontiersin.org/articles/10.3389/fpsyg.2019.01678/text'],
+  ['Dog–owner heart-rate co-modulation, 2024, Scientific Reports', 'https://jyx.jyu.fi/jyx/Record/jyx_123456789_97721/Details'],
+];
+
+const faqs = [
+  ['Is this book right for my dog?', 'It’s written for everyday dog owners: puppies, adult dogs, seniors, rescues, big dogs and small. The method works on the relationship between you and your dog, whatever the breed.'],
+  ['Does Stacy Jo use punishment?', 'Rewards lead, always. Stacy Jo is a practical, balanced trainer: on occasion she uses clear, low-level corrections, but never for fear, never for a growl, never when a dog is over threshold, and never in anger. Her test for every session: does it end with both of you calmer?'],
+  ['Is this a replacement for my vet or a behaviorist?', 'No. The book is general education. If your dog has bitten someone, or their behavior has changed suddenly, please start with your veterinarian and a qualified behavior professional.'],
+  ['What format is it?', 'A PDF that reads well on phones, tablets, and computers. You get a download link right after purchase and by email.'],
+  ['Who narrates the audiobook?', 'It’s narrated with an AI-generated version of Stacy Jo’s own voice.'],
+  ['What if it’s not for me?', `Email ${site.email} within 14 days for a full refund.`],
+  ['I have a question.', `Email ${site.email}.`],
+];
+
+const dogLine = isSet(dogs.golden) && isSet(dogs.frenchie)
+  ? `At home, that means a golden retriever named ${dogs.golden} and a French bulldog named ${dogs.frenchie}: one big dog, one small dog, and plenty of real-life practice.`
+  : 'At home, that means a golden retriever and a French bulldog: one big dog, one small dog, and plenty of real-life practice.';
+
+const jsonld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Book',
+    name: book.title,
+    alternativeHeadline: book.subtitle,
+    author: { '@type': 'Person', name: 'Stacy Jo', url: site.url },
+    image: media.cover.avif,
+    bookFormat: 'https://schema.org/EBook',
+    numberOfPages: book.pages,
+    inLanguage: 'en',
+    offers: (['ebook', 'bundle'] as const).map((k) => ({
+      '@type': 'Offer', name: products[k].name, price: price(k).toFixed(2), priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock', url: `${site.url}/#pricing`,
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Stacy Jo',
+    jobTitle: 'Dog trainer',
+    url: site.url,
+    image: media.headshot.avif,
+    sameAs: socials.map((s) => s.url),
+  },
+];
+---
+<Base
+  title="The Leash Goes Both Ways: Calm-First Dog Training | Stacy Jo"
+  description="Your dog feels what you feel. A calm-first method for the stress loop between you and your dog. 25 drills, 17 chapters, instant PDF."
+  jsonld={jsonld}
+>
+  <!-- Hero -->
+  <section class="hero band band--teal">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="label">New book by Stacy Jo</p>
+        <h1>Your dog feels what you feel. <span class="hi">Calm does too.</span></h1>
+        <p class="lead"><em>{book.title}</em> is a calm-first method for the stress loop between you and your dog, so walks, guests, and everyday life get easier for both of you.</p>
+        <div class="btn-row">
+          <BuyButton product="ebook" variant="yellow">Get the book: ${price('ebook')}</BuyButton>
+          <a class="btn btn--ghost" href="/free-chapter">Read a free chapter</a>
+        </div>
+        <p class="fine">Instant PDF download. 14-day money-back guarantee.</p>
+      </div>
+      <div class="hero-cover">
+        <Picture img={media.cover} eager class="cover"
+          alt="Book cover of The Leash Goes Both Ways by Stacy Jo, showing Stacy Jo smiling with her golden retriever and French bulldog" />
+      </div>
+    </div>
+  </section>
+
+  <!-- The problem -->
+  <section class="band">
+    <div class="wrap problem">
+      <h2 class="accent">You love your dog. Some days it still feels like a second job.</h2>
+      <div class="problem-body">
+        <ul class="pains">
+          <li>The pulling that starts the second you step outside</li>
+          <li>The lunge at the neighbor’s dog</li>
+          <li>The barking every time the doorbell rings</li>
+          <li>The dog who’s still pacing at nine o’clock at night</li>
+          <li>The nail trim that takes two people and a towel</li>
+        </ul>
+        <div class="measure">
+          <p>Most training advice treats you like a remote control: press the right button, get the right behavior. When it doesn’t work, you try a new tool, a new trick, a new trainer.</p>
+          <p>And somewhere along the way, you start to wonder if the problem is you.</p>
+          <p class="turn">It isn’t. But you are part of the picture, and that turns out to be the best news of all.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The loop -->
+  <section class="band band--mist">
+    <div class="wrap">
+      <div class="center">
+        <p class="label">The two-way loop</p>
+        <h2 class="accent">Stress travels down the leash. So does calm.</h2>
+        <p class="measure">Your dog reads your breathing, your voice, your pace, and the tension in your hand all day long. Their body responds. Then their behavior changes how <em>you</em> feel, and the loop keeps going. Most training only works on the dog’s side. This book works on both.</p>
+      </div>
+      <LoopDiagram />
+
+      <h3 class="scale-title">What researchers have measured, from seconds to months</h3>
+      <ol class="scale">
+        {scale.map((s) => (
+          <li>
+            <span class="when">{s.when}</span>
+            <strong class="what">{s.what}</strong>
+            <p>{s.text}</p>
+          </li>
+        ))}
+      </ol>
+      <p class="caveat measure">These studies are small and show links, not proof that one causes the other. But they point to one very useful idea: you have a lever. You can’t control the squirrel. You can control your next breath.</p>
+      <details class="sources">
+        <summary>Sources</summary>
+        <ul>{sources.map(([t, u]) => <li><a href={u} rel="noopener" target="_blank">{t}</a></li>)}</ul>
+      </details>
+    </div>
+  </section>
+
+  <!-- What's inside -->
+  <section class="band" id="book">
+    <div class="wrap">
+      <h2 class="accent">One method. Six pillars. Twenty-five drills.</h2>
+      <dl class="pillars">
+        {pillars.map(([name, text]) => (
+          <div class="pillar"><dt>{name}</dt><dd>{text}</dd></div>
+        ))}
+      </dl>
+      <p class="plus">Plus a 7-Day Calm Together Plan you can start tonight.</p>
+      <ul class="specs">
+        <li><strong>{book.pages}</strong> page PDF</li>
+        <li><strong>{book.chapters}</strong> short chapters</li>
+        <li><strong>{book.drills}</strong> step-by-step drills</li>
+        <li>Reads on phone, tablet, or computer</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Try a drill -->
+  <section class="band band--tight">
+    <div class="wrap">
+      <div class="drill">
+        <p class="label">A drill from Chapter 4</p>
+        <h2>The 3-Breath Reset</h2>
+        <ol>
+          <li><strong>Drop the tension.</strong> Unlock your elbow, soften your grip, let a little slack into the leash.</li>
+          <li><strong>Soften your body.</strong> Unclench your jaw, soften your knees, and let your eyes leave the trigger.</li>
+          <li><strong>The long exhale.</strong> Breathe out slowly, longer than you breathed in. <em>Then</em> give your cue, in your normal voice.</li>
+        </ol>
+        <p>Ten seconds. Try it before your next walk, and notice what changes: in you first, then in your dog.</p>
+        <a class="btn btn--primary" href="/free-chapter">Read all of Chapter 4 free</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="band band--mist" id="about">
+    <div class="wrap about">
+      <Picture img={media.headshot} class="headshot" alt="Stacy Jo" />
+      <div class="measure">
+        <h2 class="accent">Hi, I’m Stacy Jo.</h2>
+        <p>I’m a dog trainer who teaches a calm-first, balanced approach built on one simple idea: you and your dog shape each other.</p>
+        <p>Rewards lead, always. I help owners calm their own side of the leash first, read what their dogs are really saying, and build routines that leave both ends of the leash happier.</p>
+        <p>{dogLine}</p>
+        <a class="btn btn--outline" href={youtube} rel="noopener" target="_blank">Watch on YouTube</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="band" id="pricing">
+    <div class="wrap">
+      <h2 class="accent center">Get the book</h2>
+      <div class="plans">
+        <article class="plan">
+          <h3>{products.ebook.name}</h3>
+          <p class="price">
+            {launch.active && <s>${products.ebook.price}</s>}
+            <span>${price('ebook')}</span>
+          </p>
+          <ul>
+            <li>The complete {book.pages}-page PDF</li>
+            <li>All {book.chapters} chapters and {book.drills} drills</li>
+            <li>The 7-Day Calm Together Plan</li>
+            <li>Instant download</li>
+          </ul>
+          <BuyButton product="ebook" variant="outline">Get the ebook</BuyButton>
+        </article>
+        <article class="plan plan--best">
+          <p class="tag">Best value</p>
+          <h3>{products.bundle.name}</h3>
+          <p class="price">
+            {launch.active && <s>${products.bundle.price}</s>}
+            <span>${price('bundle')}</span>
+          </p>
+          <ul>
+            <li>Everything in the ebook</li>
+            <li>The complete audiobook: about 1 hour 50 minutes, 22 MP3 tracks</li>
+            <li>Narrated with an AI version of Stacy Jo’s own voice</li>
+            <li>Listen on your walks</li>
+          </ul>
+          <BuyButton product="bundle" variant="yellow">Get the bundle</BuyButton>
+        </article>
+      </div>
+      {launch.active && <p class="center launch-note">Launch prices with code <strong>{launch.code}</strong>.</p>}
+      <p class="guarantee center"><strong>14-day money-back guarantee.</strong> If the book isn’t helpful, email <a href={`mailto:${site.email}`}>{site.email}</a> within 14 days of purchase for a full refund.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="band band--mist">
+    <div class="wrap faq">
+      <h2 class="accent">Questions</h2>
+      <div class="faq-list">
+        {faqs.map(([q, a]) => (
+          <details>
+            <summary>{q}</summary>
+            <p>{a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="band band--teal">
+    <div class="wrap center">
+      <h2>Stress travels down the leash. <span class="hi">So does calm.</span></h2>
+      <div class="btn-row">
+        <a class="btn btn--yellow" href="#pricing">Get the book</a>
+        <a class="btn btn--ghost" href="/free-chapter">Read a free chapter</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Hero */
+  .hero { padding-block: clamp(3rem, 7vw, 5.5rem); overflow: hidden; }
+  .hero-grid { display: grid; gap: 2.5rem; align-items: center; }
+  .hero h1 { margin-bottom: 0.45em; }
+  .hero .lead { max-width: 34rem; }
+  .hero .btn-row { margin: 1.75rem 0 1rem; }
+  .hero-cover { justify-self: center; width: min(78%, 380px); }
+  .hero-cover :global(.cover) {
+    width: 100%;
+    border-radius: 6px;
+    outline: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow: 0 2px 0 rgba(13, 58, 74, 0.25), 0 30px 60px -18px rgba(13, 58, 74, 0.55);
+  }
+  @media (min-width: 900px) {
+    .hero-grid { grid-template-columns: 1.2fr 0.8fr; gap: 4rem; }
+    .hero-cover { width: 100%; max-width: 400px; justify-self: end; }
+  }
+
+  /* Problem */
+  .problem h2 { max-width: 22ch; }
+  .problem-body { display: grid; gap: 2.5rem; margin-top: 2rem; }
+  .pains { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.85rem; font-family: var(--sans); font-weight: 500; color: var(--ink); font-size: 1.05rem; }
+  .pains li { padding-left: 1.4rem; position: relative; line-height: 1.4; }
+  .pains li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--teal); }
+  .turn { font-family: var(--sans); font-weight: 600; color: var(--navy); font-size: 1.15rem; line-height: 1.45; }
+  @media (min-width: 900px) { .problem-body { grid-template-columns: 0.9fr 1.1fr; gap: 4rem; } }
+
+  /* Timescale */
+  .scale-title { text-align: center; margin: 3.5rem 0 1.75rem; font-size: 1.15rem; color: var(--ink); }
+  .scale { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.75rem; position: relative; }
+  .scale li { position: relative; padding-left: 2rem; }
+  .scale li::before { content: ''; position: absolute; left: 0; top: 0.35rem; width: 0.9rem; height: 0.9rem; border-radius: 50%; background: var(--yellow); border: 3px solid var(--navy); }
+  .scale::before { content: ''; position: absolute; left: 0.55rem; top: 0.8rem; bottom: 2rem; width: 2px; background: rgba(3, 88, 117, 0.25); }
+  .when { display: block; font-family: var(--sans); font-weight: 700; font-size: 1.6rem; color: var(--navy); line-height: 1.1; }
+  .what { display: block; font-family: var(--sans); font-weight: 600; color: var(--teal-deep); margin: 0.15rem 0 0.4rem; }
+  .scale p { margin: 0; font-size: 1rem; }
+  @media (min-width: 820px) {
+    .scale { grid-template-columns: repeat(3, 1fr); gap: 2.5rem; padding-top: 2.25rem; }
+    .scale::before { left: 0; right: 0; top: 0.75rem; bottom: auto; width: auto; height: 2px; }
+    .scale li { padding-left: 0; }
+    .scale li::before { top: -2.05rem; }
+  }
+  .caveat { margin: 2.25rem auto 0.75rem; text-align: center; font-style: italic; color: var(--muted); font-size: 1rem; }
+  .sources { text-align: center; font-family: var(--sans); font-size: 0.9rem; }
+  .sources summary { cursor: pointer; color: var(--navy); font-weight: 600; display: inline-block; }
+  .sources ul { list-style: none; padding: 0; margin: 0.75rem 0 0; display: grid; gap: 0.35rem; }
+
+  /* Pillars */
+  .pillars { margin: 2.5rem 0 0; display: grid; gap: 0; }
+  .pillar { padding: 1.25rem 0 1.25rem 1.25rem; border-left: 6px solid var(--yellow); margin-bottom: 1.25rem; }
+  .pillar dt { font-family: var(--sans); font-weight: 700; font-size: 1.35rem; color: var(--navy); }
+  .pillar dd { margin: 0.2rem 0 0; }
+  @media (min-width: 760px) { .pillars { grid-template-columns: 1fr 1fr; column-gap: 3rem; } }
+  .plus { font-family: var(--sans); font-weight: 600; color: var(--ink); font-size: 1.15rem; margin: 1rem 0 1.5rem; }
+  .specs { list-style: none; padding: 1.25rem 0 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; border-top: 1px solid rgba(3, 88, 117, 0.15); font-family: var(--sans); font-size: 0.95rem; color: var(--muted); }
+  .specs strong { color: var(--navy); font-size: 1.15rem; margin-right: 0.15rem; }
+
+  /* Drill */
+  .band--tight { padding-block: 0 var(--pad-section); }
+  .drill { background: var(--yellow-soft); border-radius: var(--radius-lg); padding: clamp(1.75rem, 5vw, 3.25rem); max-width: 54rem; margin-inline: auto; }
+  .drill h2 { margin-bottom: 1rem; }
+  .drill ol { counter-reset: step; list-style: none; padding: 0; margin: 0 0 1.25rem; display: grid; gap: 1rem; }
+  .drill li { counter-increment: step; position: relative; padding-left: 3.25rem; }
+  .drill li::before { content: counter(step); position: absolute; left: 0; top: -0.1rem; width: 2.25rem; height: 2.25rem; display: grid; place-items: center; border-radius: 50%; background: var(--navy); color: var(--white); font-family: var(--sans); font-weight: 700; }
+
+  /* About */
+  .about { display: grid; gap: 2rem; align-items: center; max-width: 62rem; }
+  .about :global(.headshot) { width: min(240px, 60vw); aspect-ratio: 1; object-fit: cover; border-radius: 50%; border: 6px solid var(--white); box-shadow: 0 16px 40px -16px rgba(13, 58, 74, 0.45); justify-self: center; }
+  @media (min-width: 820px) { .about { grid-template-columns: auto 1fr; gap: 4rem; } }
+
+  /* Pricing */
+  .plans { display: grid; gap: 1.5rem; margin: 2.5rem auto 1.5rem; max-width: 52rem; align-items: stretch; }
+  @media (min-width: 760px) { .plans { grid-template-columns: 1fr 1fr; } }
+  .plan { position: relative; display: flex; flex-direction: column; padding: 2rem; border-radius: var(--radius-lg); border: 2px solid rgba(3, 88, 117, 0.2); background: var(--white); }
+  .plan h3 { font-size: 1.3rem; margin-bottom: 0.25rem; }
+  .price { font-family: var(--sans); font-weight: 700; font-size: 3rem; line-height: 1.1; color: var(--navy); margin: 0 0 1rem; }
+  .price s { font-size: 1.4rem; color: var(--muted); font-weight: 500; margin-right: 0.4rem; }
+  .plan ul { margin: 0 0 1.75rem; padding-left: 1.15rem; flex: 1; font-size: 1rem; }
+  .plan li { margin-bottom: 0.4rem; }
+  .plan .btn { width: 100%; }
+  .plan--best { background: var(--navy); border-color: var(--navy); color: rgba(255, 255, 255, 0.92); }
+  .plan--best h3, .plan--best .price { color: var(--white); }
+  .plan--best .price s { color: rgba(255, 255, 255, 0.6); }
+  .tag { position: absolute; top: -0.85rem; right: 1.5rem; margin: 0; background: var(--yellow); color: var(--ink); font-family: var(--sans); font-weight: 600; font-size: 0.85rem; padding: 0.25rem 0.8rem; border-radius: 999px; }
+  .launch-note { font-family: var(--sans); color: var(--ink); }
+  .guarantee { max-width: 38rem; margin-inline: auto; font-size: 1rem; }
+
+  /* FAQ */
+  .faq-list { max-width: 46rem; margin-top: 1.5rem; }
+  .faq-list details { border-bottom: 1px solid rgba(3, 88, 117, 0.18); }
+  .faq-list summary { cursor: pointer; list-style: none; padding: 1.15rem 2.5rem 1.15rem 0; position: relative; font-family: var(--sans); font-weight: 600; color: var(--ink); font-size: 1.05rem; }
+  .faq-list summary::-webkit-details-marker { display: none; }
+  .faq-list summary::after { content: '+'; position: absolute; right: 0.25rem; top: 50%; transform: translateY(-50%); font-size: 1.6rem; font-weight: 500; color: var(--navy); transition: transform 0.2s ease; }
+  .faq-list details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+  .faq-list details p { margin: 0 0 1.25rem; max-width: 40rem; }
+</style>

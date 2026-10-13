@@ -1,0 +1,21 @@
+---
+import { kit, site } from '../config';
+---
+<div class="kit">
+  {kit.embedHtml ? (
+    <Fragment set:html={kit.embedHtml} />
+  ) : (
+    <div class="kit-fallback">
+      <p><strong>The free chapter signup opens very soon.</strong></p>
+      <p>In the meantime, email <a href={`mailto:${site.email}?subject=Free%20chapter%20please`}>{site.email}</a> and Stacy Jo will send it to you.</p>
+    </div>
+  )}
+  <p class="fine">No spam. Unsubscribe anytime.</p>
+</div>
+<style>
+  .kit-fallback { background: var(--white); border: 2px dashed var(--teal); border-radius: var(--radius); padding: 1.25rem 1.4rem; margin-bottom: 0.75rem; color: var(--text); }
+  .kit-fallback p { margin: 0 0 0.4rem; }
+  .kit-fallback p:last-of-type { margin: 0; }
+  .kit :global(input[type='email']) { min-height: 3rem; font-size: 1rem; }
+  .kit :global(button) { font-family: var(--sans); }
+</style>

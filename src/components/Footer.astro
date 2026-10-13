@@ -1,0 +1,49 @@
+---
+import { site, socials, book } from '../config';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="wrap grid">
+    <div>
+      <p class="wordmark">Stacy Jo</p>
+      <p class="tag">{site.tagline}.</p>
+      <p class="handle">@StacyJoDogs everywhere</p>
+    </div>
+    <nav aria-label="Social">
+      <p class="head">Follow</p>
+      <ul>{socials.map((s) => <li><a href={s.url} rel="noopener" target="_blank">{s.name}</a></li>)}</ul>
+    </nav>
+    <nav aria-label="Site">
+      <p class="head">More</p>
+      <ul>
+        <li><a href="/free-chapter">Free chapter</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/refunds">Refunds</a></li>
+        <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="wrap legal">
+    <p>© {year} Stacy Jo. <em>{book.title}</em> offers general education, not veterinary advice.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--ink); color: rgba(255, 255, 255, 0.86);
+    padding: 4rem 0 calc(2rem + env(safe-area-inset-bottom, 0px));
+    font-family: var(--sans); font-size: 0.95rem;
+  }
+  .grid { display: grid; gap: 2.5rem; grid-template-columns: 1fr; }
+  @media (min-width: 760px) { .grid { grid-template-columns: 2fr 1fr 1fr; } }
+  .wordmark { font-weight: 700; font-size: 1.5rem; color: var(--white); margin: 0 0 0.4rem; }
+  .tag { margin: 0 0 0.4rem; max-width: 22rem; }
+  .handle { color: var(--yellow); font-weight: 600; margin: 0; }
+  .head { font-weight: 600; color: var(--white); margin: 0 0 0.6rem; }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.45rem; }
+  a { color: rgba(255, 255, 255, 0.86); text-decoration: none; }
+  a:hover { color: var(--white); text-decoration: underline; }
+  .legal { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.14); font-size: 0.85rem; color: rgba(255, 255, 255, 0.7); }
+  .legal p { margin: 0; }
+</style>

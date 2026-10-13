@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, referral, youtube, isSet } from '../config';
+---
+<Base title="Thank You | Stacy Jo" description="Thank you for your order." noindex>
+  <section class="band band--mist">
+    <div class="wrap measure-wrap">
+      <h1>Thank you! Your book is on its way.</h1>
+      <p class="lead">Your download link is in your inbox (and on the receipt screen). If you don’t see it in a few minutes, check spam or promotions, or email <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+      <ol class="steps">
+        <li><strong>Start with the 7-Day Calm Together Plan</strong> at the back of the book: one small step a day.</li>
+        {isSet(referral.sparkloopUrl) && (
+          <li><strong>Unlock the free audiobook:</strong> share the free chapter with three dog-owner friends. <a class="btn btn--primary" href={referral.sparkloopUrl}>Get my share link</a></li>
+        )}
+        <li><strong>Watch the drills in action</strong> on YouTube. <a class="btn btn--outline" href={youtube} rel="noopener" target="_blank">Open YouTube</a></li>
+      </ol>
+    </div>
+  </section>
+</Base>
+<style>
+  .measure-wrap { max-width: 44rem; }
+  h1 { font-size: clamp(2.1rem, 5vw, 3.2rem); }
+  .steps { margin: 2rem 0 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 1.5rem; }
+  .steps li { counter-increment: s; position: relative; padding-left: 3.25rem; }
+  .steps li::before { content: counter(s); position: absolute; left: 0; top: -0.1rem; width: 2.25rem; height: 2.25rem; display: grid; place-items: center; border-radius: 50%; background: var(--navy); color: var(--white); font-family: var(--sans); font-weight: 700; }
+  .steps .btn { margin-top: 0.75rem; display: flex; width: fit-content; }
+</style>

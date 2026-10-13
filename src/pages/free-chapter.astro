@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import KitForm from '../components/KitForm.astro';
+import Picture from '../components/Picture.astro';
+import { media, book } from '../config';
+---
+<Base title="Free Chapter: Calm Is Contagious | Stacy Jo"
+  description="Read Chapter 4 of The Leash Goes Both Ways free, including the 3-Breath Reset that makes calm contagious.">
+  <section class="band band--mist fc">
+    <div class="wrap grid">
+      <div>
+        <p class="label">Free chapter</p>
+        <h1>Read Chapter 4 free: Calm Is Contagious</h1>
+        <p class="lead">The signature chapter of <em>{book.title}</em>, plus the introduction. Free, straight to your inbox.</p>
+        <KitForm />
+        <h2 class="learn">You’ll learn</h2>
+        <ul class="learn-list">
+          <li>Why yelling “No!” can sound like joining in to your dog</li>
+          <li>The 3-Breath Reset: the 10-second skill everything else builds on</li>
+          <li>How to keep your voice steady so it calms instead of alarms</li>
+          <li>A simple practice plan that makes calm show up when you need it</li>
+        </ul>
+      </div>
+      <div class="cover-wrap">
+        <Picture img={media.cover} eager class="cover" alt="Book cover of The Leash Goes Both Ways by Stacy Jo" />
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .fc { padding-block: clamp(3rem, 7vw, 5.5rem); }
+  .grid { display: grid; gap: 3rem; align-items: start; }
+  @media (min-width: 900px) { .grid { grid-template-columns: 1.2fr 0.8fr; gap: 4.5rem; } }
+  h1 { font-size: clamp(2.2rem, 5.5vw, 3.4rem); }
+  .lead { max-width: 34rem; margin-bottom: 1.75rem; }
+  .learn { font-size: 1.15rem; margin: 2.5rem 0 0.75rem; color: var(--ink); }
+  .learn-list { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.5rem; }
+  .cover-wrap { justify-self: center; width: min(70%, 340px); }
+  .cover-wrap :global(.cover) { width: 100%; border-radius: 6px; box-shadow: 0 30px 60px -18px rgba(13, 58, 74, 0.5); }
+</style>

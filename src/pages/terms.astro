@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, legal, book, isSet } from '../config';
+---
+<Base title="Terms | Stacy Jo" description="Terms of use for stacyjo.com and The Leash Goes Both Ways.">
+  <section class="band"><div class="wrap prose">
+    <h1>Terms</h1>
+    <p class="fine">Last updated: {legal.updated}</p>
+    <h2>Your purchase</h2>
+    <p>Buying <em>{book.title}</em> gives you a personal, non-transferable license to read and use it. Please don’t share, resell, or post the paid files. The free chapter may be shared freely in its complete, unaltered form.</p>
+    <h2>Not veterinary advice</h2>
+    <p>The book and this site offer general education about dog behavior and training, not veterinary advice or a behavioral diagnosis. You’re responsible for your dog’s safety and for seeking professional help when needed. If your dog has bitten someone or their behavior has changed suddenly, please see your veterinarian and a qualified behavior professional.</p>
+    <h2>Liability</h2>
+    <p>Content is provided “as is.” To the extent the law allows, Stacy Jo isn’t liable for indirect or consequential damages arising from use of this site or the book.</p>
+    {isSet(legal.governingLaw) && (<><h2>Governing law</h2><p>These terms are governed by the laws of {legal.governingLaw}.</p></>)}
+    <h2>Contact</h2>
+    <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+  </div></section>
+</Base>

@@ -1,0 +1,84 @@
+---
+import { youtube } from '../config';
+const links = [
+  { href: '/#book', label: 'The book' },
+  { href: '/free-chapter', label: 'Free chapter' },
+  { href: '/#about', label: 'About' },
+  { href: youtube, label: 'YouTube', external: true },
+];
+---
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="wordmark" href="/" aria-label="Stacy Jo, home">Stacy Jo</a>
+    <nav aria-label="Main">
+      <ul class="nav-links">
+        {links.map((l) => (
+          <li><a href={l.href} {...(l.external ? { rel: 'noopener', target: '_blank' } : {})}>{l.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <a class="btn btn--primary get" href="/#pricing">Get the book</a>
+    <details class="menu">
+      <summary aria-label="Menu"><span></span><span></span><span></span></summary>
+      <ul>
+        {links.map((l) => (
+          <li><a href={l.href} {...(l.external ? { rel: 'noopener', target: '_blank' } : {})}>{l.label}</a></li>
+        ))}
+      </ul>
+    </details>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding-top: env(safe-area-inset-top, 0px);
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: saturate(1.4) blur(8px);
+    border-bottom: 1px solid rgba(3, 88, 117, 0.1);
+  }
+  .bar { display: flex; align-items: center; gap: 1.25rem; min-height: 4.25rem; }
+  .wordmark {
+    font-family: var(--sans); font-weight: 700; font-size: 1.35rem;
+    color: var(--navy); text-decoration: none; letter-spacing: -0.01em;
+    margin-right: auto;
+  }
+  .wordmark::after {
+    content: ''; display: inline-block; width: 0.38em; height: 0.38em;
+    margin-left: 0.1em; border-radius: 50%; background: var(--yellow);
+  }
+  .nav-links { display: none; list-style: none; margin: 0; padding: 0; gap: 1.75rem; }
+  .nav-links a, .menu a {
+    font-family: var(--sans); font-weight: 500; font-size: 0.98rem;
+    color: var(--ink); text-decoration: none;
+  }
+  .nav-links a:hover { color: var(--navy); text-decoration: underline; }
+  .get { min-height: 2.75rem; padding: 0.55rem 1.15rem; font-size: 0.95rem; }
+
+  .menu { position: relative; }
+  .menu summary {
+    list-style: none; cursor: pointer; width: 2.75rem; height: 2.75rem;
+    display: grid; place-content: center; gap: 5px; border-radius: 8px;
+  }
+  .menu summary::-webkit-details-marker { display: none; }
+  .menu summary span { display: block; width: 22px; height: 2.5px; background: var(--navy); border-radius: 2px; }
+  .menu ul {
+    position: absolute; right: 0; top: calc(100% + 0.5rem);
+    list-style: none; margin: 0; padding: 0.5rem;
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: 0 18px 40px rgba(13, 58, 74, 0.18); min-width: 12rem;
+  }
+  .menu li a { display: block; padding: 0.7rem 0.9rem; border-radius: 8px; }
+  .menu li a:hover { background: var(--mist); }
+
+  @media (min-width: 860px) {
+    .nav-links { display: flex; }
+    .menu { display: none; }
+  }
+  @media (max-width: 380px) {
+    .bar { gap: 0.6rem; }
+    .get { padding-inline: 0.85rem; font-size: 0.88rem; }
+  }
+</style>

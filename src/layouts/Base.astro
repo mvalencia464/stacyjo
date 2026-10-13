@@ -1,0 +1,60 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import LaunchBanner from '../components/LaunchBanner.astro';
+import { site, media, anyCheckoutLive } from '../config';
+
+interface Props {
+  title: string;
+  description: string;
+  noindex?: boolean;
+  jsonld?: object[];
+}
+const { title, description, noindex = false, jsonld = [] } = Astro.props;
+// `build.format: 'file'` makes the build pathname `/free-chapter.html`. Pages
+// serves that file at `/free-chapter`, which is also what the sitemap lists.
+const publicPath = Astro.url.pathname.replace(/index\.html$/, '').replace(/\.html$/, '') || '/';
+const canonical = new URL(publicPath, site.url).toString();
+const ogImage = new URL(media.og, site.url).toString();
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#3ab0c8" />
+    <link rel="preconnect" href="https://media.stokeleads.com" crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {jsonld.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
+    <!-- Optional: paste a cookieless analytics snippet (e.g. Cloudflare Web Analytics) here -->
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <LaunchBanner />
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    {anyCheckoutLive && <script is:inline src="https://app.lemonsqueezy.com/js/lemon.js" defer></script>}
+  </body>
+</html>

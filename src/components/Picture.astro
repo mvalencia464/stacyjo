@@ -1,0 +1,12 @@
+---
+// AVIF from Cloudflare R2 first. If that file can't load (or AVIF isn't supported),
+// the browser falls back to the local JPG in /public/images.
+interface Props { img: { avif: string; jpg: string; width: number; height: number }; alt: string; class?: string; eager?: boolean }
+const { img, alt, class: cls, eager = false } = Astro.props;
+---
+<picture>
+  <source srcset={img.avif} type="image/avif" />
+  <img src={img.jpg} alt={alt} width={img.width} height={img.height} class={cls}
+    loading={eager ? 'eager' : 'lazy'} decoding="async" fetchpriority={eager ? 'high' : 'auto'}
+    onerror="this.onerror=null;var s=this.parentNode.querySelector('source');if(s){s.remove();this.src=this.getAttribute('src');}" />
+</picture>

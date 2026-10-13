@@ -1,0 +1,69 @@
+---
+// The brand's one bold moment: the leash as a two-way loop between you and your dog.
+---
+<figure class="loop" data-loop>
+  <svg viewBox="0 0 640 410" role="img" aria-labelledby="loop-title loop-desc">
+    <title id="loop-title">The two-way loop between you and your dog</title>
+    <desc id="loop-desc">An arrow runs from You to Your dog, labeled breath, voice, leash tension. A second arrow runs back from Your dog to You, labeled behavior, body language.</desc>
+
+    <!-- you → dog -->
+    <path class="rope rope--out" d="M175 150 C260 40 380 40 465 150" />
+    <path class="braid braid--out" d="M175 150 C260 40 380 40 465 150" />
+    <polygon class="head head--out" points="0,0 -26,-13 -26,13" transform="translate(468 154) rotate(52.3)" />
+    <text class="lbl lbl--out" x="320" y="36" text-anchor="middle">breath, voice, leash tension</text>
+
+    <!-- dog → you -->
+    <path class="rope rope--back" d="M465 250 C380 360 260 360 175 250" />
+    <path class="braid braid--back" d="M465 250 C380 360 260 360 175 250" />
+    <polygon class="head head--back" points="0,0 -26,-13 -26,13" transform="translate(172 246) rotate(232.3)" />
+    <text class="lbl lbl--back" x="320" y="398" text-anchor="middle">behavior, body language</text>
+
+    <!-- nodes -->
+    <circle class="node node--you" cx="110" cy="200" r="78" />
+    <text class="name" x="110" y="211" text-anchor="middle">You</text>
+    <circle class="node node--dog" cx="530" cy="200" r="78" />
+    <text class="name name--dog" x="530" y="210" text-anchor="middle">Your dog</text>
+  </svg>
+</figure>
+
+<script is:inline>
+  (() => {
+    const el = document.querySelector('[data-loop]');
+    if (!el) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) return;
+    el.classList.add('is-armed');
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) { el.classList.add('is-drawn'); io.disconnect(); }
+    }, { threshold: 0.45 });
+    io.observe(el);
+  })();
+</script>
+
+<style>
+  .loop { margin: 2.5rem auto 0; max-width: 720px; }
+  svg { width: 100%; height: auto; overflow: visible; }
+  .rope { fill: none; stroke-width: 9; stroke-linecap: round; }
+  .rope--out { stroke: var(--navy); }
+  .rope--back { stroke: var(--teal-deep); }
+  .braid { fill: none; stroke: rgba(255, 255, 255, 0.45); stroke-width: 3; stroke-dasharray: 3 9; stroke-linecap: round; }
+  .head--out { fill: var(--navy); }
+  .head--back { fill: var(--teal-deep); }
+  .lbl { font-family: var(--sans); font-weight: 600; font-size: 27px; }
+  .lbl--out { fill: var(--navy); }
+  .lbl--back { fill: var(--teal-deep); }
+  .node { stroke: var(--navy); stroke-width: 4; }
+  .node--you { fill: var(--yellow); }
+  .node--dog { fill: var(--white); }
+  .name { font-family: var(--sans); font-weight: 700; font-size: 31px; fill: var(--ink); }
+  .name--dog { font-size: 26px; }
+
+  /* One orchestrated draw-in, only when JS + motion are allowed */
+  .is-armed .rope { stroke-dasharray: 520; stroke-dashoffset: 520; }
+  .is-armed .braid, .is-armed .head, .is-armed .lbl { opacity: 0; }
+  .is-drawn .rope { stroke-dashoffset: 0; transition: stroke-dashoffset 1.2s cubic-bezier(.6, .05, .3, 1); }
+  .is-drawn .rope--back { transition-delay: 0.9s; }
+  .is-drawn .braid, .is-drawn .head, .is-drawn .lbl { opacity: 1; transition: opacity 0.4s ease; }
+  .is-drawn .braid--out, .is-drawn .head--out, .is-drawn .lbl--out { transition-delay: 1.05s; }
+  .is-drawn .braid--back, .is-drawn .head--back, .is-drawn .lbl--back { transition-delay: 1.95s; }
+</style>

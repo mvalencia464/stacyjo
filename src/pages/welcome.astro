@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import { book, youtube } from '../config';
+---
+<Base title="Welcome | Stacy Jo" description="Your free chapter is on its way." noindex>
+  <section class="band band--mist">
+    <div class="wrap measure-wrap">
+      <h1>Check your inbox: Chapter 4 is on its way.</h1>
+      <p class="lead">Confirm your email if Kit asks you to, and the free chapter will arrive right after.</p>
+      <div class="card">
+        <h2>Want the whole method?</h2>
+        <p>{book.chapters} chapters, {book.drills} drills, and the 7-Day Calm Together Plan.</p>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="/#pricing">Get the book</a>
+          <a class="btn btn--outline" href={youtube} rel="noopener" target="_blank">Subscribe on YouTube</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .measure-wrap { max-width: 44rem; }
+  h1 { font-size: clamp(2.1rem, 5vw, 3.2rem); }
+  .card { margin-top: 2.5rem; background: var(--white); border-radius: var(--radius-lg); padding: 2rem; border-left: 6px solid var(--yellow); }
+  .card h2 { font-size: 1.5rem; }
+</style>
