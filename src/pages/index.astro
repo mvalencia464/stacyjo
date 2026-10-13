@@ -83,13 +83,18 @@ const jsonld = [
     <div class="wrap hero-grid">
       <div class="hero-copy">
         <p class="label">New book by Stacy Jo</p>
-        <h1>Your dog feels what you feel. <span class="hi">Calm does too.</span></h1>
+        <h1>Your dog feels what you feel. <span class="hi">Keep them calm.</span></h1>
         <p class="lead"><em>{book.title}</em> is a calm-first method for the stress loop between you and your dog, so walks, guests, and everyday life get easier for both of you.</p>
         <div class="btn-row">
           <BuyButton product="ebook" variant="yellow">Get the book: ${price('ebook')}</BuyButton>
           <a class="btn btn--ghost" href="/free-chapter">Read a free chapter</a>
         </div>
-        <p class="hero-bundle">Prefer to listen? <a href="#audiobook">Get the ebook + audiobook for ${price('bundle')}</a></p>
+        <p class="hero-bundle">
+          <a class="hero-bundle-thumb" href="#audiobook" tabindex="-1" aria-hidden="true">
+            <Picture img={media.cover} class="thumb" alt="" />
+          </a>
+          <span>Prefer to listen? <a href="#audiobook">Get the ebook + audiobook for ${price('bundle')}</a></span>
+        </p>
         <ul class="badges">{heroBadges.map((b) => <li class="badge"><Fragment set:html={check} />{b}</li>)}</ul>
       </div>
       <div class="hero-cover">
@@ -383,8 +388,10 @@ const jsonld = [
   .hero h1 { margin-bottom: 0.45em; }
   .hero .lead { max-width: 34rem; }
   .hero .btn-row { margin: 1.75rem 0 0.9rem; }
-  .hero-bundle { font-family: var(--sans); font-size: 0.95rem; margin: 0 0 1.4rem; color: rgba(255, 255, 255, 0.92); }
+  .hero-bundle { display: flex; align-items: center; gap: 0.8rem; font-family: var(--sans); font-size: 0.95rem; margin: 0 0 1.4rem; color: rgba(255, 255, 255, 0.92); }
   .hero-bundle a { font-weight: 600; }
+  .hero-bundle-thumb { flex: none; line-height: 0; border-radius: 4px; overflow: hidden; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28); }
+  .hero-bundle-thumb :global(img) { display: block; width: 46px; height: auto; }
   .hero-cover { justify-self: center; width: min(78%, 380px); }
   .hero-cover :global(.cover) {
     width: 100%; border-radius: 6px; outline: 1px solid rgba(255, 255, 255, 0.55);
