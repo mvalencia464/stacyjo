@@ -43,6 +43,12 @@ Local JPG copies in `public/images/` are used automatically if R2 can't be reach
 
 Paste each product’s Payment Link into `products.ebook.checkoutUrl` and `products.bundle.checkoutUrl`. The buttons go straight to Stripe Checkout.
 
+**Launch code:** when `launch.active` is true, every buy button adds `?prefilled_promo_code=BOTHWAYS` so the code is already applied at checkout. For that to work, create `BOTHWAYS` as a promotion code in Stripe ($5 off), and turn on **Allow promotion codes** on both Payment Links.
+
+## Home page content
+
+The book details on the home page (chapters, drills, problem-to-fix cards, quotes, 7-day plan, audiobook tracks) live in `src/data/book.ts`. Edit them there and the page updates everywhere.
+
 Both live Payment Links already send buyers to `https://stacyjo.com/thank-you` after payment.
 
 ## Kit (free chapter signup)

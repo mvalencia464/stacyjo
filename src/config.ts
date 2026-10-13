@@ -82,7 +82,12 @@ export const legal = {
 export function checkoutHref(key: keyof typeof products) {
   const url = products[key].checkoutUrl;
   if (!isSet(url)) return { href: '/#pricing', live: false };
-  return { href: url, live: true };
+  if (!(launch.active && launch.prefillCode)) return { href: url, live: true };
+  // Pre-fills the launch code at checkout. The code must exist as a Stripe promotion code,
+  // and the Payment Link must have "Allow promotion codes" turned on.
+  const u = new URL(url);
+  u.searchParams.set('prefilled_promo_code', launch.code);
+  return { href: u.toString(), live: true };
 }
 export const price = (key: keyof typeof products) =>
   launch.active ? products[key].price - launch.amountOff : products[key].price;

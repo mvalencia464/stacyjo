@@ -4,15 +4,11 @@ import BuyButton from '../components/BuyButton.astro';
 import Picture from '../components/Picture.astro';
 import LoopDiagram from '../components/LoopDiagram.astro';
 import { site, media, book, products, launch, socials, youtube, dogs, isSet, price } from '../config';
+import { parts, problems, drills, lines, plan, tracks } from '../data/book';
 
-const pillars = [
-  ['Regulate', 'Calm yourself first, then train. Thresholds, triggers, and teaching your dog to switch off.'],
-  ['Understand', 'The quiet stress signals most owners miss, and what your own body is saying back.'],
-  ['Bond', 'Consent, play, and nail trims without the wrestling match.'],
-  ['Move', 'The sniffari, and the end of the leash tug-of-war.'],
-  ['Nourish', 'Food, comfort, routine, and easing resource guarding.'],
-  ['Live', 'The TRIP framework, real-world manners, and multi-dog homes.'],
-];
+const check = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+
+const heroBadges = [`${book.pages}-page PDF`, `${book.drills} step-by-step drills`, 'Instant download', '14-day money-back guarantee'];
 
 const scale = [
   { when: 'Seconds', what: 'Heart rhythm', text: 'Dogs’ and owners’ heart rhythms can line up, especially during quiet rest together, and the effect grows the longer they’ve lived together.' },
@@ -27,14 +23,32 @@ const sources = [
   ['Dog–owner heart-rate co-modulation, 2024, Scientific Reports', 'https://jyx.jyu.fi/jyx/Record/jyx_123456789_97721/Details'],
 ];
 
+const alsoInside = [
+  'The 7-Day Calm Together Plan: one small step a day',
+  'A drill quick-reference table, so you can find any drill in seconds',
+  'A one-line takeaway at the end of every chapter',
+  'Clear notes on when to call your vet or a behavior professional',
+  'Research notes and sources, for the curious',
+];
+
+const forYou = [
+  'Walks feel like a tug-of-war, and you come home more wound up than when you left',
+  'Your dog reacts to other dogs, people, bikes, or the doorbell',
+  'You’ve tried tips and tricks that worked for a week, then didn’t',
+  'You want a calmer dog without yelling, wrestling, or guesswork',
+  'You want to understand why your dog does what they do, not just what to do about it',
+];
+
 const faqs = [
   ['Is this book right for my dog?', 'It’s written for everyday dog owners: puppies, adult dogs, seniors, rescues, big dogs and small. The method works on the relationship between you and your dog, whatever the breed.'],
+  ['What do I need to get started?', 'A leash, treats your dog loves, and about ten minutes a day. A long line (15 to 30 feet) helps for the sniffari and decompression walks.'],
+  ['How long until I see a difference?', 'Most drills take 5 to 10 minutes. The 7-Day Plan gets you started in a week. Bigger challenges, like reactivity, take steady practice over several weeks. Every dog moves at their own pace.'],
   ['Does Stacy Jo use punishment?', 'Rewards lead, always. Stacy Jo is a practical, balanced trainer: on occasion she uses clear, low-level corrections, but never for fear, never for a growl, never when a dog is over threshold, and never in anger. Her test for every session: does it end with both of you calmer?'],
   ['Is this a replacement for my vet or a behaviorist?', 'No. The book is general education. If your dog has bitten someone, or their behavior has changed suddenly, please start with your veterinarian and a qualified behavior professional.'],
-  ['What format is it?', 'A PDF that reads well on phones, tablets, and computers. You get a download link right after purchase and by email.'],
+  ['What format is it?', 'A PDF that reads well on phones, tablets, and computers. You get a download link right after purchase and by email. The bundle adds the audiobook as MP3 files.'],
   ['Who narrates the audiobook?', 'It’s narrated with an AI-generated version of Stacy Jo’s own voice.'],
+  ['Is checkout secure?', 'Yes. Payments are handled by Stripe. Your card details never touch this site.'],
   ['What if it’s not for me?', `Email ${site.email} within 14 days for a full refund.`],
-  ['I have a question.', `Email ${site.email}.`],
 ];
 
 const dogLine = isSet(dogs.golden) && isSet(dogs.frenchie)
@@ -43,28 +57,18 @@ const dogLine = isSet(dogs.golden) && isSet(dogs.frenchie)
 
 const jsonld = [
   {
-    '@context': 'https://schema.org',
-    '@type': 'Book',
-    name: book.title,
-    alternativeHeadline: book.subtitle,
+    '@context': 'https://schema.org', '@type': 'Book',
+    name: book.title, alternativeHeadline: book.subtitle,
     author: { '@type': 'Person', name: 'Stacy Jo', url: site.url },
-    image: media.cover.avif,
-    bookFormat: 'https://schema.org/EBook',
-    numberOfPages: book.pages,
-    inLanguage: 'en',
+    image: media.cover.avif, bookFormat: 'https://schema.org/EBook', numberOfPages: book.pages, inLanguage: 'en',
     offers: (['ebook', 'bundle'] as const).map((k) => ({
       '@type': 'Offer', name: products[k].name, price: price(k).toFixed(2), priceCurrency: 'USD',
       availability: 'https://schema.org/InStock', url: `${site.url}/#pricing`,
     })),
   },
   {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: 'Stacy Jo',
-    jobTitle: 'Dog trainer',
-    url: site.url,
-    image: media.headshot.avif,
-    sameAs: socials.map((s) => s.url),
+    '@context': 'https://schema.org', '@type': 'Person', name: 'Stacy Jo', jobTitle: 'Dog trainer',
+    url: site.url, image: media.headshot.avif, sameAs: socials.map((s) => s.url),
   },
 ];
 ---
@@ -72,9 +76,10 @@ const jsonld = [
   title="The Leash Goes Both Ways: Calm-First Dog Training | Stacy Jo"
   description="Your dog feels what you feel. A calm-first method for the stress loop between you and your dog. 25 drills, 17 chapters, instant PDF."
   jsonld={jsonld}
+  sticky
 >
   <!-- Hero -->
-  <section class="hero band band--teal">
+  <section class="hero band band--teal" data-hero>
     <div class="wrap hero-grid">
       <div class="hero-copy">
         <p class="label">New book by Stacy Jo</p>
@@ -84,7 +89,8 @@ const jsonld = [
           <BuyButton product="ebook" variant="yellow">Get the book: ${price('ebook')}</BuyButton>
           <a class="btn btn--ghost" href="/free-chapter">Read a free chapter</a>
         </div>
-        <p class="fine">Instant PDF download. 14-day money-back guarantee.</p>
+        <p class="hero-bundle">Prefer to listen? <a href="#audiobook">Get the ebook + audiobook for ${price('bundle')}</a></p>
+        <ul class="badges">{heroBadges.map((b) => <li class="badge"><Fragment set:html={check} />{b}</li>)}</ul>
       </div>
       <div class="hero-cover">
         <Picture img={media.cover} eager class="cover"
@@ -93,23 +99,28 @@ const jsonld = [
     </div>
   </section>
 
-  <!-- The problem -->
+  <!-- Problems → fixes -->
   <section class="band">
-    <div class="wrap problem">
-      <h2 class="accent">You love your dog. Some days it still feels like a second job.</h2>
-      <div class="problem-body">
-        <ul class="pains">
-          <li>The pulling that starts the second you step outside</li>
-          <li>The lunge at the neighbor’s dog</li>
-          <li>The barking every time the doorbell rings</li>
-          <li>The dog who’s still pacing at nine o’clock at night</li>
-          <li>The nail trim that takes two people and a towel</li>
-        </ul>
-        <div class="measure">
-          <p>Most training advice treats you like a remote control: press the right button, get the right behavior. When it doesn’t work, you try a new tool, a new trick, a new trainer.</p>
-          <p>And somewhere along the way, you start to wonder if the problem is you.</p>
-          <p class="turn">It isn’t. But you are part of the picture, and that turns out to be the best news of all.</p>
-        </div>
+    <div class="wrap">
+      <div class="intro">
+        <h2 class="accent">You love your dog. Some days it still feels like a second job.</h2>
+        <p class="lead">If you’ve ever said one of these, there’s a chapter for it, and a step-by-step drill inside.</p>
+      </div>
+      <ul class="problems">
+        {problems.map((p) => (
+          <li class="problem">
+            <blockquote>“{p.quote}”</blockquote>
+            <div class="fix">
+              <span class="fix-label">The fix</span>
+              <strong>{p.fix}</strong>
+              <span class="ch-tag">Chapter {p.ch}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <div class="turn-box">
+        <p>Most training advice treats you like a remote control: press the right button, get the right behavior. When it doesn’t work, you try a new tool, a new trick, a new trainer. And somewhere along the way, you start to wonder if the problem is you.</p>
+        <p class="turn">It isn’t. But you are part of the picture, and that turns out to be the best news of all.</p>
       </div>
     </div>
   </section>
@@ -123,15 +134,10 @@ const jsonld = [
         <p class="measure">Your dog reads your breathing, your voice, your pace, and the tension in your hand all day long. Their body responds. Then their behavior changes how <em>you</em> feel, and the loop keeps going. Most training only works on the dog’s side. This book works on both.</p>
       </div>
       <LoopDiagram />
-
       <h3 class="scale-title">What researchers have measured, from seconds to months</h3>
       <ol class="scale">
         {scale.map((s) => (
-          <li>
-            <span class="when">{s.when}</span>
-            <strong class="what">{s.what}</strong>
-            <p>{s.text}</p>
-          </li>
+          <li><span class="when">{s.when}</span><strong class="what">{s.what}</strong><p>{s.text}</p></li>
         ))}
       </ol>
       <p class="caveat measure">These studies are small and show links, not proof that one causes the other. But they point to one very useful idea: you have a lever. You can’t control the squirrel. You can control your next breath.</p>
@@ -142,44 +148,149 @@ const jsonld = [
     </div>
   </section>
 
-  <!-- What's inside -->
-  <section class="band" id="book">
-    <div class="wrap">
-      <h2 class="accent">One method. Six pillars. Twenty-five drills.</h2>
-      <dl class="pillars">
-        {pillars.map(([name, text]) => (
-          <div class="pillar"><dt>{name}</dt><dd>{text}</dd></div>
-        ))}
-      </dl>
-      <p class="plus">Plus a 7-Day Calm Together Plan you can start tonight.</p>
-      <ul class="specs">
-        <li><strong>{book.pages}</strong> page PDF</li>
-        <li><strong>{book.chapters}</strong> short chapters</li>
-        <li><strong>{book.drills}</strong> step-by-step drills</li>
-        <li>Reads on phone, tablet, or computer</li>
-      </ul>
+  <!-- Excerpt -->
+  <section class="band">
+    <div class="wrap excerpt-grid">
+      <div class="page" aria-label="Excerpt from Chapter 4">
+        <p class="page-head">From Chapter 4: Calm Is Contagious</p>
+        <p>Rosa’s dog Diesel is a big, goofy pit mix who goes wild when the doorbell rings. Barking, spinning, charging the door.</p>
+        <p>Rosa’s response was the one most of us have: “NO! DIESEL! STOP! DIESEL! NO!”</p>
+        <p>Loud. Sharp. Fast. Over and over.</p>
+        <p>Now imagine you’re Diesel. You hear a strange noise, so you sound the alarm. Then your favorite person starts shouting too.</p>
+        <p>To Diesel, Rosa wasn’t stopping the barking.</p>
+        <p class="page-punch">She was joining in.</p>
+      </div>
+      <div class="excerpt-copy">
+        <p class="label">Read a page</p>
+        <h2 class="accent">The fix starts on your end of the leash.</h2>
+        <p>Rosa learns a ten-second skill called the 3-Breath Reset. She practices it when nothing is happening, then with fake doorbells, then for real.</p>
+        <p>Two weeks later, the doorbell rings. What Diesel does next is the reason this chapter is the heart of the book.</p>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="/free-chapter">Read Chapter 4 free</a>
+          <a class="btn btn--outline" href="#pricing">Get the whole book</a>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- Try a drill -->
-  <section class="band band--tight">
+  <!-- What's inside -->
+  <section class="band band--mist" id="book">
     <div class="wrap">
+      <div class="intro">
+        <h2 class="accent">One method. Six pillars. Seventeen short chapters.</h2>
+        <p class="lead">Every chapter follows the same rhythm: the problem in words you’ve probably said out loud, what’s really going on, your dog’s side and your side, a drill, and one line to remember.</p>
+      </div>
+      <div class="toc">
+        {parts.map((p) => (
+          <section class="toc-part">
+            <h3>{p.pillar}<span>{p.note}</span></h3>
+            <ol>
+              {p.chapters.map((c) => (
+                <li value={c.n}>
+                  <span class="num" aria-hidden="true">{c.n}</span>
+                  <div><strong>{c.title}</strong><p>{c.hook}</p></div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))}
+        <section class="toc-part toc-also">
+          <h3>Also inside</h3>
+          <ul class="checks">{alsoInside.map((a) => <li>{a}</li>)}</ul>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <!-- Drills -->
+  <section class="band">
+    <div class="wrap">
+      <div class="intro">
+        <h2 class="accent">{book.drills} step-by-step drills you can start today.</h2>
+        <p class="lead">No theory homework. Each drill is short, specific, and built for real life: the front door, the sidewalk, the vet, the couch.</p>
+      </div>
+      <ul class="chips">{drills.map((d) => <li class="chip">{d}</li>)}</ul>
+
       <div class="drill">
-        <p class="label">A drill from Chapter 4</p>
-        <h2>The 3-Breath Reset</h2>
+        <p class="label">Try one right now</p>
+        <h3>The 3-Breath Reset <span class="ch-tag">Chapter 4</span></h3>
         <ol>
           <li><strong>Drop the tension.</strong> Unlock your elbow, soften your grip, let a little slack into the leash.</li>
           <li><strong>Soften your body.</strong> Unclench your jaw, soften your knees, and let your eyes leave the trigger.</li>
           <li><strong>The long exhale.</strong> Breathe out slowly, longer than you breathed in. <em>Then</em> give your cue, in your normal voice.</li>
         </ol>
         <p>Ten seconds. Try it before your next walk, and notice what changes: in you first, then in your dog.</p>
-        <a class="btn btn--primary" href="/free-chapter">Read all of Chapter 4 free</a>
       </div>
     </div>
   </section>
 
+  <!-- 7-day plan -->
+  <section class="band band--mist">
+    <div class="wrap">
+      <div class="intro">
+        <h2 class="accent">Start tonight with the 7‑Day Calm Together Plan.</h2>
+        <p class="lead">One small step a day, ten minutes or less. By day seven, you’ve tried the core of the method and picked your first problem to solve.</p>
+      </div>
+      <ol class="week">
+        {plan.map((d) => (
+          <li><span class="day">Day {d.day}</span><strong>{d.title}</strong><p>{d.text}</p></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Lines -->
+  <section class="band band--teal">
+    <div class="wrap">
+      <h2 class="center">A few lines from the book</h2>
+      <ul class="lines">
+        {lines.map((l) => (
+          <li><blockquote>{l.text}</blockquote><span>Chapter {l.ch}</span></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Audiobook -->
+  <section class="band" id="audiobook">
+    <div class="wrap audio-grid">
+      <div>
+        <p class="label">Ebook + Audiobook</p>
+        <h2 class="accent">Prefer to listen? Take the book on your walks.</h2>
+        <p class="lead">The complete book as an audiobook: {tracks.length} tracks, about 1 hour 50 minutes. Start a chapter at the front door, then practice the drill on the sidewalk.</p>
+        <ul class="checks">
+          <li>Every chapter, plus the 7-Day Plan as its own track</li>
+          <li>Tables rewritten for listening, so nothing gets lost</li>
+          <li>MP3 files that play on any phone or computer</li>
+          <li>Narrated with an AI-generated version of Stacy Jo’s own voice</li>
+        </ul>
+        <div class="btn-row audio-cta">
+          <BuyButton product="bundle" variant="primary">Get the ebook + audiobook: ${price('bundle')}</BuyButton>
+        </div>
+      </div>
+      <div class="tracks">
+        <p class="tracks-head">Track list <span>{tracks.length} tracks</span></p>
+        <ol>{tracks.map((t) => <li>{t}</li>)}</ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who it's for -->
+  <section class="band band--mist">
+    <div class="wrap who">
+      <div>
+        <h2 class="accent">This book is for you if…</h2>
+        <ul class="checks">{forYou.map((f) => <li>{f}</li>)}</ul>
+      </div>
+      <aside class="who-not">
+        <h3>Start somewhere else if…</h3>
+        <p>Your dog has bitten someone, or their behavior has changed suddenly. Please begin with your veterinarian and a qualified behavior professional. This book can support that work, but it shouldn’t replace it.</p>
+      </aside>
+    </div>
+  </section>
+
   <!-- About -->
-  <section class="band band--mist" id="about">
+  <section class="band" id="about">
     <div class="wrap about">
       <Picture img={media.headshot} class="headshot" alt="Stacy Jo" />
       <div class="measure">
@@ -193,20 +304,20 @@ const jsonld = [
   </section>
 
   <!-- Pricing -->
-  <section class="band" id="pricing">
+  <section class="band band--mist" id="pricing">
     <div class="wrap">
       <h2 class="accent center">Get the book</h2>
+      <p class="center lead price-lead">Everything you need to calm both ends of the leash, starting tonight.</p>
       <div class="plans">
         <article class="plan">
           <h3>{products.ebook.name}</h3>
-          <p class="price">
-            {launch.active && <s>${products.ebook.price}</s>}
-            <span>${price('ebook')}</span>
-          </p>
-          <ul>
-            <li>The complete {book.pages}-page PDF</li>
-            <li>All {book.chapters} chapters and {book.drills} drills</li>
+          <p class="price">{launch.active && <s>${products.ebook.price}</s>}<span>${price('ebook')}</span></p>
+          <ul class="checks">
+            <li>All {book.chapters} chapters, {book.pages}-page PDF</li>
+            <li>{book.drills} step-by-step drills</li>
             <li>The 7-Day Calm Together Plan</li>
+            <li>Drill quick-reference table</li>
+            <li>Research notes and sources</li>
             <li>Instant download</li>
           </ul>
           <BuyButton product="ebook" variant="outline">Get the ebook</BuyButton>
@@ -214,47 +325,53 @@ const jsonld = [
         <article class="plan plan--best">
           <p class="tag">Best value</p>
           <h3>{products.bundle.name}</h3>
-          <p class="price">
-            {launch.active && <s>${products.bundle.price}</s>}
-            <span>${price('bundle')}</span>
-          </p>
-          <ul>
-            <li>Everything in the ebook</li>
-            <li>The complete audiobook: about 1 hour 50 minutes, 22 MP3 tracks</li>
+          <p class="price">{launch.active && <s>${products.bundle.price}</s>}<span>${price('bundle')}</span></p>
+          <p class="plus-line">Everything in the ebook, plus:</p>
+          <ul class="checks">
+            <li>The complete audiobook: {tracks.length} tracks, about 1 hour 50 minutes</li>
+            <li>The 7-Day Plan as its own track</li>
+            <li>MP3s for any phone or computer</li>
             <li>Narrated with an AI version of Stacy Jo’s own voice</li>
-            <li>Listen on your walks</li>
           </ul>
           <BuyButton product="bundle" variant="yellow">Get the bundle</BuyButton>
         </article>
       </div>
       {launch.active && <p class="center launch-note">Launch prices with code <strong>{launch.code}</strong>.</p>}
-      <p class="guarantee center"><strong>14-day money-back guarantee.</strong> If the book isn’t helpful, email <a href={`mailto:${site.email}`}>{site.email}</a> within 14 days of purchase for a full refund.</p>
+      <ul class="badges trust">
+        <li class="badge"><Fragment set:html={check} />Secure checkout with Stripe</li>
+        <li class="badge"><Fragment set:html={check} />Instant download</li>
+        <li class="badge"><Fragment set:html={check} />Reads on any device</li>
+      </ul>
+      <div class="guarantee">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4l16 6v12c0 10-7 18-16 22C15 40 8 32 8 22V10z" fill="#FFD703" stroke="#035875" stroke-width="3" stroke-linejoin="round"/><path d="M16.5 24.5l5 5 10-11" fill="none" stroke="#035875" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div>
+          <h3>14-day money-back guarantee</h3>
+          <p>Try the whole method for two weeks. If it isn’t helping, email <a href={`mailto:${site.email}`}>{site.email}</a> for a full refund. No questions asked.</p>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- FAQ -->
-  <section class="band band--mist">
+  <section class="band">
     <div class="wrap faq">
       <h2 class="accent">Questions</h2>
       <div class="faq-list">
-        {faqs.map(([q, a]) => (
-          <details>
-            <summary>{q}</summary>
-            <p>{a}</p>
-          </details>
-        ))}
+        {faqs.map(([q, a]) => (<details><summary>{q}</summary><p>{a}</p></details>))}
       </div>
     </div>
   </section>
 
   <!-- Final CTA -->
   <section class="band band--teal">
-    <div class="wrap center">
+    <div class="wrap center final">
       <h2>Stress travels down the leash. <span class="hi">So does calm.</span></h2>
+      <p class="lead measure">Your next walk can be different. It starts with one breath, on your end of the leash.</p>
       <div class="btn-row">
-        <a class="btn btn--yellow" href="#pricing">Get the book</a>
-        <a class="btn btn--ghost" href="/free-chapter">Read a free chapter</a>
+        <BuyButton product="ebook" variant="yellow">Get the book: ${price('ebook')}</BuyButton>
+        <BuyButton product="bundle" variant="ghost">Ebook + audiobook: ${price('bundle')}</BuyButton>
       </div>
+      <p class="fine"><a href="/free-chapter">Or read a free chapter first</a></p>
     </div>
   </section>
 </Base>
@@ -265,12 +382,12 @@ const jsonld = [
   .hero-grid { display: grid; gap: 2.5rem; align-items: center; }
   .hero h1 { margin-bottom: 0.45em; }
   .hero .lead { max-width: 34rem; }
-  .hero .btn-row { margin: 1.75rem 0 1rem; }
+  .hero .btn-row { margin: 1.75rem 0 0.9rem; }
+  .hero-bundle { font-family: var(--sans); font-size: 0.95rem; margin: 0 0 1.4rem; color: rgba(255, 255, 255, 0.92); }
+  .hero-bundle a { font-weight: 600; }
   .hero-cover { justify-self: center; width: min(78%, 380px); }
   .hero-cover :global(.cover) {
-    width: 100%;
-    border-radius: 6px;
-    outline: 1px solid rgba(255, 255, 255, 0.55);
+    width: 100%; border-radius: 6px; outline: 1px solid rgba(255, 255, 255, 0.55);
     box-shadow: 0 2px 0 rgba(13, 58, 74, 0.25), 0 30px 60px -18px rgba(13, 58, 74, 0.55);
   }
   @media (min-width: 900px) {
@@ -278,14 +395,24 @@ const jsonld = [
     .hero-cover { width: 100%; max-width: 400px; justify-self: end; }
   }
 
-  /* Problem */
-  .problem h2 { max-width: 22ch; }
-  .problem-body { display: grid; gap: 2.5rem; margin-top: 2rem; }
-  .pains { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.85rem; font-family: var(--sans); font-weight: 500; color: var(--ink); font-size: 1.05rem; }
-  .pains li { padding-left: 1.4rem; position: relative; line-height: 1.4; }
-  .pains li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--teal); }
-  .turn { font-family: var(--sans); font-weight: 600; color: var(--navy); font-size: 1.15rem; line-height: 1.45; }
-  @media (min-width: 900px) { .problem-body { grid-template-columns: 0.9fr 1.1fr; gap: 4rem; } }
+  .intro { max-width: 46rem; margin-bottom: 2.5rem; }
+  .intro .lead { color: var(--muted); }
+
+  /* Problems */
+  .problems { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+  @media (min-width: 700px) { .problems { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .problems { grid-template-columns: repeat(3, 1fr); } }
+  .problem {
+    display: flex; flex-direction: column; justify-content: space-between; gap: 1.25rem;
+    padding: 1.4rem 1.4rem 1.2rem; border-radius: var(--radius); background: var(--mist);
+  }
+  .problem blockquote { margin: 0; font-style: italic; font-size: 1.08rem; line-height: 1.5; color: var(--ink); }
+  .fix { display: grid; gap: 0.15rem; padding-top: 0.9rem; border-top: 1px solid rgba(3, 88, 117, 0.15); }
+  .fix-label { font-family: var(--sans); font-size: 0.8rem; font-weight: 600; color: var(--teal-deep); }
+  .fix strong { font-family: var(--sans); font-weight: 700; color: var(--navy); font-size: 1.05rem; line-height: 1.3; }
+  .fix .ch-tag { justify-self: start; margin-top: 0.4rem; }
+  .turn-box { max-width: 46rem; margin: 3rem auto 0; text-align: center; }
+  .turn { font-family: var(--sans); font-weight: 600; color: var(--navy); font-size: 1.2rem; line-height: 1.45; }
 
   /* Timescale */
   .scale-title { text-align: center; margin: 3.5rem 0 1.75rem; font-size: 1.15rem; color: var(--ink); }
@@ -307,23 +434,76 @@ const jsonld = [
   .sources summary { cursor: pointer; color: var(--navy); font-weight: 600; display: inline-block; }
   .sources ul { list-style: none; padding: 0; margin: 0.75rem 0 0; display: grid; gap: 0.35rem; }
 
-  /* Pillars */
-  .pillars { margin: 2.5rem 0 0; display: grid; gap: 0; }
-  .pillar { padding: 1.25rem 0 1.25rem 1.25rem; border-left: 6px solid var(--yellow); margin-bottom: 1.25rem; }
-  .pillar dt { font-family: var(--sans); font-weight: 700; font-size: 1.35rem; color: var(--navy); }
-  .pillar dd { margin: 0.2rem 0 0; }
-  @media (min-width: 760px) { .pillars { grid-template-columns: 1fr 1fr; column-gap: 3rem; } }
-  .plus { font-family: var(--sans); font-weight: 600; color: var(--ink); font-size: 1.15rem; margin: 1rem 0 1.5rem; }
-  .specs { list-style: none; padding: 1.25rem 0 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; border-top: 1px solid rgba(3, 88, 117, 0.15); font-family: var(--sans); font-size: 0.95rem; color: var(--muted); }
-  .specs strong { color: var(--navy); font-size: 1.15rem; margin-right: 0.15rem; }
+  /* Excerpt */
+  .excerpt-grid { display: grid; gap: 2.5rem; align-items: center; }
+  @media (min-width: 900px) { .excerpt-grid { grid-template-columns: 1fr 1fr; gap: 4.5rem; } }
+  .page {
+    position: relative; background: #fffdf6; border-radius: 4px 14px 14px 4px;
+    padding: 2.25rem 2rem 2rem 2.5rem;
+    box-shadow: 0 1px 0 rgba(13, 58, 74, 0.08), 0 24px 50px -24px rgba(13, 58, 74, 0.45);
+    border-left: 6px solid var(--yellow);
+    font-size: 1.05rem;
+  }
+  .page p { margin: 0 0 0.85em; }
+  .page-head { font-family: var(--sans); font-weight: 600; font-size: 0.8rem; color: var(--teal-deep); margin-bottom: 1.25rem !important; }
+  .page-punch { font-family: var(--sans); font-weight: 700; color: var(--navy); font-size: 1.3rem; margin: 0 !important; }
 
-  /* Drill */
-  .band--tight { padding-block: 0 var(--pad-section); }
-  .drill { background: var(--yellow-soft); border-radius: var(--radius-lg); padding: clamp(1.75rem, 5vw, 3.25rem); max-width: 54rem; margin-inline: auto; }
-  .drill h2 { margin-bottom: 1rem; }
+  /* TOC */
+  .toc { display: grid; gap: 1.25rem; }
+  @media (min-width: 820px) { .toc { grid-template-columns: 1fr 1fr; align-items: start; } }
+  .toc-part { background: var(--white); border-radius: var(--radius); padding: 1.5rem 1.5rem 1.1rem; }
+  .toc-part h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem; font-size: 1.3rem; margin-bottom: 0.9rem; }
+  .toc-part h3 span { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 0.95rem; color: var(--teal-deep); }
+  .toc-part ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.9rem; }
+  .toc-part ol > li { display: grid; grid-template-columns: 2rem 1fr; gap: 0.75rem; align-items: start; }
+  .num { width: 2rem; height: 2rem; border-radius: 50%; display: grid; place-items: center; background: var(--navy); color: var(--white); font-family: var(--sans); font-weight: 700; font-size: 0.85rem; }
+  .toc-part ol > li strong { font-family: var(--sans); font-weight: 600; color: var(--ink); line-height: 1.3; display: block; }
+  .toc-part ol > li p { margin: 0.1rem 0 0; font-size: 0.95rem; line-height: 1.5; color: var(--muted); }
+  .toc-also { background: var(--yellow-soft); }
+  .toc-also .checks { font-size: 0.98rem; }
+
+  /* Drills */
+  .chips { max-width: 60rem; }
+  .drill { background: var(--yellow-soft); border-radius: var(--radius-lg); padding: clamp(1.75rem, 5vw, 3rem); max-width: 54rem; margin: 3rem auto 0; }
+  .drill h3 { font-size: clamp(1.5rem, 3vw, 2rem); display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.9rem; margin-bottom: 1rem; }
+  .drill h3 .ch-tag { background: var(--white); }
   .drill ol { counter-reset: step; list-style: none; padding: 0; margin: 0 0 1.25rem; display: grid; gap: 1rem; }
   .drill li { counter-increment: step; position: relative; padding-left: 3.25rem; }
   .drill li::before { content: counter(step); position: absolute; left: 0; top: -0.1rem; width: 2.25rem; height: 2.25rem; display: grid; place-items: center; border-radius: 50%; background: var(--navy); color: var(--white); font-family: var(--sans); font-weight: 700; }
+  .drill > p:last-child { margin: 0; }
+
+  /* Plan */
+  .week { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+  .week li { background: var(--white); border-radius: var(--radius); padding: 1.25rem 1.25rem 1.1rem; border-top: 5px solid var(--yellow); }
+  .day { display: block; font-family: var(--sans); font-weight: 600; font-size: 0.85rem; color: var(--teal-deep); }
+  .week strong { display: block; font-family: var(--sans); font-weight: 700; color: var(--navy); font-size: 1.1rem; margin: 0.15rem 0 0.35rem; }
+  .week p { margin: 0; font-size: 0.97rem; line-height: 1.5; }
+
+  /* Lines */
+  .lines { list-style: none; margin: 2.5rem 0 0; padding: 0; display: grid; gap: 1.25rem; }
+  @media (min-width: 720px) { .lines { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .lines { grid-template-columns: repeat(3, 1fr); } }
+  .lines li { position: relative; padding: 2.1rem 1.5rem 1.25rem; border-radius: var(--radius); background: rgba(255, 255, 255, 0.12); }
+  .lines li::before { content: '“'; position: absolute; top: -0.35rem; left: 1.1rem; font-family: var(--serif); font-size: 4rem; line-height: 1; color: var(--yellow); }
+  .lines blockquote { margin: 0; font-family: var(--sans); font-weight: 600; font-size: 1.15rem; line-height: 1.4; color: var(--white); }
+  .lines span { display: block; margin-top: 0.9rem; font-family: var(--sans); font-size: 0.82rem; color: rgba(255, 255, 255, 0.85); }
+
+  /* Audiobook */
+  .audio-grid { display: grid; gap: 2.5rem; align-items: start; }
+  @media (min-width: 900px) { .audio-grid { grid-template-columns: 1.1fr 0.9fr; gap: 4rem; } }
+  .audio-cta { margin-top: 1.75rem; }
+  .tracks { background: var(--navy); color: rgba(255, 255, 255, 0.9); border-radius: var(--radius-lg); padding: 1.5rem 1.25rem 1.25rem 1.5rem; }
+  .tracks-head { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--sans); font-weight: 700; color: var(--white); margin: 0 0 0.9rem; padding-right: 0.25rem; }
+  .tracks-head span { font-weight: 500; font-size: 0.85rem; color: var(--yellow); }
+  .tracks ol { margin: 0; padding: 0 0.5rem 0 1.6rem; max-height: 22rem; overflow-y: auto; font-family: var(--sans); font-size: 0.9rem; display: grid; gap: 0.45rem; scrollbar-color: rgba(255,255,255,0.35) transparent; -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent); mask-image: linear-gradient(to bottom, #000 82%, transparent); padding-bottom: 2.5rem; }
+  .tracks li::marker { color: var(--yellow); font-weight: 600; }
+
+  /* Who */
+  .who { display: grid; gap: 2rem; align-items: start; }
+  @media (min-width: 900px) { .who { grid-template-columns: 1.4fr 1fr; gap: 4rem; } }
+  .who-not { background: var(--white); border-radius: var(--radius); padding: 1.5rem; border-left: 6px solid var(--teal); }
+  .who-not h3 { margin-bottom: 0.5rem; }
+  .who-not p { margin: 0; font-size: 1rem; }
 
   /* About */
   .about { display: grid; gap: 2rem; align-items: center; max-width: 62rem; }
@@ -331,21 +511,28 @@ const jsonld = [
   @media (min-width: 820px) { .about { grid-template-columns: auto 1fr; gap: 4rem; } }
 
   /* Pricing */
-  .plans { display: grid; gap: 1.5rem; margin: 2.5rem auto 1.5rem; max-width: 52rem; align-items: stretch; }
+  .price-lead { color: var(--muted); max-width: 36rem; margin-inline: auto; }
+  .plans { display: grid; gap: 1.5rem; margin: 2.5rem auto 1.75rem; max-width: 54rem; align-items: stretch; }
   @media (min-width: 760px) { .plans { grid-template-columns: 1fr 1fr; } }
   .plan { position: relative; display: flex; flex-direction: column; padding: 2rem; border-radius: var(--radius-lg); border: 2px solid rgba(3, 88, 117, 0.2); background: var(--white); }
   .plan h3 { font-size: 1.3rem; margin-bottom: 0.25rem; }
-  .price { font-family: var(--sans); font-weight: 700; font-size: 3rem; line-height: 1.1; color: var(--navy); margin: 0 0 1rem; }
+  .price { font-family: var(--sans); font-weight: 700; font-size: 3rem; line-height: 1.1; color: var(--navy); margin: 0 0 1.1rem; }
   .price s { font-size: 1.4rem; color: var(--muted); font-weight: 500; margin-right: 0.4rem; }
-  .plan ul { margin: 0 0 1.75rem; padding-left: 1.15rem; flex: 1; font-size: 1rem; }
-  .plan li { margin-bottom: 0.4rem; }
+  .plan .checks { margin: 0 0 1.75rem; flex: 1; font-size: 1rem; align-content: start; }
   .plan .btn { width: 100%; }
-  .plan--best { background: var(--navy); border-color: var(--navy); color: rgba(255, 255, 255, 0.92); }
+  .plus-line { font-family: var(--sans); font-weight: 600; margin: 0 0 0.75rem; color: var(--yellow); }
+  .plan--best { background: var(--navy); border-color: var(--navy); color: rgba(255, 255, 255, 0.92); box-shadow: 0 24px 50px -24px rgba(3, 88, 117, 0.6); }
   .plan--best h3, .plan--best .price { color: var(--white); }
   .plan--best .price s { color: rgba(255, 255, 255, 0.6); }
+  .plan--best .checks li::before { background-color: var(--yellow); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23035875' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E"); }
   .tag { position: absolute; top: -0.85rem; right: 1.5rem; margin: 0; background: var(--yellow); color: var(--ink); font-family: var(--sans); font-weight: 600; font-size: 0.85rem; padding: 0.25rem 0.8rem; border-radius: 999px; }
   .launch-note { font-family: var(--sans); color: var(--ink); }
-  .guarantee { max-width: 38rem; margin-inline: auto; font-size: 1rem; }
+  .trust { justify-content: center; margin-bottom: 2rem; }
+  .trust .badge { background: var(--white); }
+  .guarantee { display: flex; gap: 1.25rem; align-items: center; max-width: 40rem; margin-inline: auto; background: var(--white); border-radius: var(--radius-lg); padding: 1.5rem 1.75rem; }
+  .guarantee svg { width: 3.25rem; height: 3.25rem; flex: none; }
+  .guarantee h3 { margin: 0 0 0.25rem; font-size: 1.15rem; }
+  .guarantee p { margin: 0; font-size: 1rem; }
 
   /* FAQ */
   .faq-list { max-width: 46rem; margin-top: 1.5rem; }
@@ -355,4 +542,8 @@ const jsonld = [
   .faq-list summary::after { content: '+'; position: absolute; right: 0.25rem; top: 50%; transform: translateY(-50%); font-size: 1.6rem; font-weight: 500; color: var(--navy); transition: transform 0.2s ease; }
   .faq-list details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
   .faq-list details p { margin: 0 0 1.25rem; max-width: 40rem; }
+
+  /* Final */
+  .final .lead { margin: 0 auto 1.75rem; }
+  .final .fine { margin-top: 1.1rem; }
 </style>
