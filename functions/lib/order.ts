@@ -4,15 +4,8 @@ export interface Env {
   DOWNLOADS: R2Bucket;
   STRIPE_SECRET_KEY: string;
   STRIPE_WEBHOOK_SECRET?: string;
-  EMAIL?: {
-    send(message: {
-      to: string;
-      from: { email: string; name?: string };
-      replyTo?: { email: string; name?: string };
-      subject: string;
-      text: string;
-      html: string;
-    }): Promise<{ messageId: string }>;
+  MAILER?: {
+    fetch(input: string, init?: RequestInit): Promise<Response>;
   };
 }
 
@@ -89,7 +82,7 @@ function escapeHtml(value: string): string {
 async function sendDownloadEmail(env: Env, session: StripeSession, product: Product): Promise<boolean> {
   const email = session.customer_details?.email;
   const intent = paymentIntent(session);
-  if (!email || !env.EMAIL) return false;
+  if (!email || !env.MAILER) return false;
   if (intent?.metadata?.download_email_sent === '1') return true;
 
   const page = `${SITE}/thank-you?session_id=${encodeURIComponent(session.id)}`;
@@ -113,14 +106,20 @@ async function sendDownloadEmail(env: Env, session: StripeSession, product: Prod
 <p>Save that page. The links on it are yours. If anything is missing, email <a href="mailto:hello@stacyjo.com">hello@stacyjo.com</a>.</p>`;
 
   try {
-    await env.EMAIL.send({
-      to: email,
-      from: { email: 'hello@stacyjo.com', name: 'Stacy Jo' },
-      replyTo: { email: 'hello@stacyjo.com', name: 'Stacy Jo' },
-      subject: 'Your download: The Leash Goes Both Ways',
-      text,
-      html,
+    const sent = await env.MAILER.fetch('https://stacyjo-mailer/send', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        to: email,
+        subject: 'Your download: The Leash Goes Both Ways',
+        text,
+        html,
+      }),
     });
+    if (!sent.ok) {
+      console.error('Download email failed', sent.status);
+      return false;
+    }
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Email send failed';
     console.error('Download email failed', message);

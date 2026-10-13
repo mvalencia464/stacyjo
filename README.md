@@ -59,7 +59,7 @@ In Stripe, add a webhook endpoint for `checkout.session.completed`:
 
 Put its signing secret in the Pages project as `STRIPE_WEBHOOK_SECRET`. `STRIPE_SECRET_KEY` is already set. The thank-you page still sends the email if the webhook is not in place yet.
 
-Pages config cannot declare an email binding, so add it in the Pages project: Settings, Bindings, Email, variable name `EMAIL`, allowed sender `hello@stacyjo.com`. Downloads still appear on the thank-you page if that binding is missing.
+Pages cannot send email itself. A Worker named `stacyjo-mailer` sends from hello@stacyjo.com, and the Pages project calls it through the `MAILER` service binding in `wrangler.jsonc`. Downloads still appear on the thank-you page if that binding is missing.
 
 ## Kit (free chapter signup)
 
