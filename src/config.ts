@@ -41,7 +41,7 @@ export const products = {
 };
 
 export const launch = {
-  active: false, // flip to true for launch week
+  active: true, // flip to true for launch week
   code: 'BOTHWAYS',
   amountOff: 5,
   endsLabel: '{{LAUNCH_END_DATE}}', // e.g. "Sunday, November 9"
