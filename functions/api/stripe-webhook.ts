@@ -46,7 +46,11 @@ export async function onRequestPost(context: PagesContext): Promise<Response> {
   }
   if (event.type === 'checkout.session.completed' && event.data?.object?.id) {
     try {
-      await fulfill(context.env, event.data.object.id);
+      const result = await fulfill(context.env, event.data.object.id, 'webhook');
+      // If the email failed, ask Stripe to retry. The R2 marker prevents duplicate emails.
+      if (result.status === 200 && result.body.emailStatus === 'failed') {
+        return new Response('Email failed; retry.', { status: 500 });
+      }
     } catch (error) {
       console.error('Webhook fulfill failed', error instanceof Error ? error.message : 'unknown');
       return new Response('Fulfillment failed.', { status: 500 });

@@ -11,7 +11,7 @@ export async function onRequestGet(context: PagesContext): Promise<Response> {
     return Response.json({ ok: false, error: 'Missing payment.' }, { status: 400, headers: { 'Cache-Control': 'no-store' } });
   }
   try {
-    const result = await fulfill(context.env, sessionId);
+    const result = await fulfill(context.env, sessionId, 'page');
     if (result.status !== 200) {
       return Response.json({ ok: false, error: result.error }, { status: result.status, headers: { 'Cache-Control': 'no-store' } });
     }

@@ -9,6 +9,12 @@
       "bucket_name": "stacyjo-downloads"
     }
   ],
+  "vars": {
+    // Stripe Payment Link IDs (plink_...), from Stripe → Payment Links → open a link → copy its ID.
+    // Optional: orders still match by product name and price without them, but these never break.
+    "STRIPE_LINK_EBOOK": "",
+    "STRIPE_LINK_BUNDLE": ""
+  },
   "services": [
     {
       "binding": "MAILER",

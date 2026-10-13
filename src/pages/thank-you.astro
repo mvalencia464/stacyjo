@@ -39,9 +39,11 @@ import { site, referral, youtube, isSet } from '../config';
           lead.textContent = body.error || 'We could not confirm this payment. Email hello@stacyjo.com.';
           return;
         }
-        const sent = body.emailSent && body.email
+        const sent = body.email && body.emailStatus === 'sent'
           ? ' We also emailed them to ' + body.email + '.'
-          : ' Save this page. If the email does not arrive, these links are your copy.';
+          : body.email && body.emailStatus === 'pending'
+            ? ' A copy is on its way to ' + body.email + '.'
+            : ' Save this page. If the email does not arrive, these links are your copy.';
         lead.textContent = 'Your files are below.' + sent;
         const list = document.createElement('ul');
         list.className = 'downloads';

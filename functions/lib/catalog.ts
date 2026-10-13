@@ -6,6 +6,8 @@ export interface DownloadFile {
   name: string;
   type: string;
   products: Product[];
+  /** Listed only if the object exists in R2, so it can be uploaded after deploy. */
+  optional?: boolean;
 }
 
 const audio = (n: string, title: string): DownloadFile => ({
@@ -23,6 +25,14 @@ export const files: DownloadFile[] = [
     name: 'The Leash Goes Both Ways.pdf',
     type: 'application/pdf',
     products: ['ebook', 'bundle'],
+  },
+  {
+    id: 'audiobook-zip',
+    key: 'audio/The-Leash-Goes-Both-Ways-Audiobook.zip',
+    name: 'The Leash Goes Both Ways - Audiobook (all 22 tracks).zip',
+    type: 'application/zip',
+    products: ['bundle'],
+    optional: true,
   },
   audio('01', 'Opening Credits'),
   audio('02', 'Introduction - The Walk You Dread'),
