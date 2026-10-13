@@ -3,7 +3,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import LaunchBanner from '../components/LaunchBanner.astro';
-import { site, media, anyCheckoutLive } from '../config';
+import { site, media } from '../config';
 
 interface Props {
   title: string;
@@ -55,6 +55,5 @@ const ogImage = new URL(media.og, site.url).toString();
       <slot />
     </main>
     <Footer />
-    {anyCheckoutLive && <script is:inline src="https://app.lemonsqueezy.com/js/lemon.js" defer></script>}
   </body>
 </html>

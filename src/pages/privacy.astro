@@ -9,12 +9,12 @@ import { site, legal } from '../config';
     <h2>Who we are</h2>
     <p>This site is run by Stacy Jo (stacyjo.com). Questions: <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
     <h2>What we collect</h2>
-    <p>Your email address (and first name, if you give it) when you sign up for the free chapter or emails, and purchase details when you buy. We never see or store payment card numbers: Lemon Squeezy handles payments as the merchant of record.</p>
+    <p>Your email address (and first name, if you give it) when you sign up for the free chapter or emails, and purchase details when you buy. We never see or store payment card numbers. Stripe processes payments.</p>
     <h2>How we use it</h2>
     <p>To deliver what you asked for, send emails you signed up for, answer support questions, and improve the site.</p>
     <h2>Service providers</h2>
     <ul>
-      <li>Lemon Squeezy: checkout, payments, and file delivery</li>
+      <li>Stripe: checkout and payments</li>
       <li>Kit: email delivery</li>
       <li>{legal.hosting}: website hosting and image delivery</li>
       <li>{legal.analytics ? `${legal.analytics}: privacy-friendly, cookieless analytics` : 'No analytics or advertising cookies are used on this site.'}</li>

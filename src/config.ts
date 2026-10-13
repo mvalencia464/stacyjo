@@ -31,12 +31,12 @@ export const products = {
   ebook: {
     name: 'Ebook',
     price: 19,
-    checkoutUrl: '{{LS_EBOOK_CHECKOUT_URL}}', // Lemon Squeezy → Products → Share
+    checkoutUrl: 'https://buy.stripe.com/test_bJecN6etraF0ep4aAadfG00',
   },
   bundle: {
     name: 'Ebook + Audiobook',
     price: 29,
-    checkoutUrl: '{{LS_BUNDLE_CHECKOUT_URL}}',
+    checkoutUrl: 'https://buy.stripe.com/test_00w6oI9974gC4OueQqdfG01',
   },
 };
 
@@ -78,15 +78,11 @@ export const legal = {
   governingLaw: '{{STATE_OR_COUNTRY}}',
 };
 
-/** Checkout link for a product, with overlay + optional launch code. Falls back to #pricing until set. */
+/** Stripe Payment Link. Falls back to #pricing until a real URL is set. */
 export function checkoutHref(key: keyof typeof products) {
   const url = products[key].checkoutUrl;
   if (!isSet(url)) return { href: '/#pricing', live: false };
-  const u = new URL(url);
-  u.searchParams.set('embed', '1');
-  if (launch.active && launch.prefillCode) u.searchParams.set('checkout[discount_code]', launch.code);
-  return { href: u.toString(), live: true };
+  return { href: url, live: true };
 }
-export const anyCheckoutLive = isSet(products.ebook.checkoutUrl) || isSet(products.bundle.checkoutUrl);
 export const price = (key: keyof typeof products) =>
   launch.active ? products[key].price - launch.amountOff : products[key].price;

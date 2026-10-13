@@ -18,8 +18,8 @@ Anything still written as `{{LIKE_THIS}}` counts as "not set yet". The site hide
 
 | Setting | What to put there | Until it's set |
 | --- | --- | --- |
-| `products.ebook.checkoutUrl` | Lemon Squeezy checkout link for the ebook | Buy buttons scroll to pricing |
-| `products.bundle.checkoutUrl` | Lemon Squeezy checkout link for the bundle | Same |
+| `products.ebook.checkoutUrl` | Stripe Payment Link for the ebook | Buy buttons scroll to pricing |
+| `products.bundle.checkoutUrl` | Stripe Payment Link for the bundle | Same |
 | `kit.embedHtml` | Kit's embed code for the "Free Chapter" form | Free-chapter box asks people to email hello@stacyjo.com |
 | `dogs.golden`, `dogs.frenchie` | The dogs' names | About section says "a golden retriever and a French bulldog" |
 | `launch.active` | `true` during launch week | No banner, regular prices |
@@ -39,13 +39,11 @@ Local JPG copies in `public/images/` are used automatically if R2 can't be reach
 
 `public/images/og-image.jpg` is the preview picture shown when someone shares a stacyjo.com link.
 
-## Lemon Squeezy (buy buttons)
+## Stripe (buy buttons)
 
-1. Create the two products. On each, use **Share** to copy the checkout link and paste it into the config.
-2. On each product, set the **Confirmation modal → Button link** to `https://stacyjo.com/thank-you`.
-3. Create the discount code `BOTHWAYS` ($5 off). When `launch.active` is true, the site pre-fills it at checkout.
+Paste each product’s Payment Link into `products.ebook.checkoutUrl` and `products.bundle.checkoutUrl`. The buttons go straight to Stripe Checkout.
 
-Buttons open checkout as an overlay on the page. Without JavaScript, they still go to Lemon Squeezy's checkout page.
+On each Payment Link, set the confirmation redirect to `https://stacyjo.com/thank-you` so buyers land on the thank-you page after payment. The links in config right now are Stripe test links.
 
 ## Kit (free chapter signup)
 
