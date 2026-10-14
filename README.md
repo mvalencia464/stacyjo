@@ -89,7 +89,7 @@ npm run deploy
 
 - **One email per order.** The Stripe webhook sends the download email. A small marker in R2 (`orders/<session>/download-email.json`) records it, so webhook retries and page reloads never send a second one, including on 100%-off orders. The thank-you page only sends the email itself if none has gone out two minutes after checkout.
 - **Matching orders to products.** For bulletproof matching, set `STRIPE_LINK_EBOOK` and `STRIPE_LINK_BUNDLE` in `wrangler.jsonc` to the Payment Link IDs (`plink_...`). Without them, orders match by product name, then by list price.
-- **Audiobook ZIP.** Run `scripts/upload-audiobook-zip.sh /path/to/the/22/mp3s` to upload one ZIP of every track. It appears first on bundle buyers' download pages as soon as it's in R2, and the email then links the PDF and the ZIP instead of 23 separate files.
+- **Audiobook files.** Run `node scripts/upload-audiobook.mjs src/resources` (add `--dry-run` first to check). It finds all 22 MP3s by track number, uploads each to the key the site serves, and uploads one ZIP of every track. The ZIP appears first on bundle buyers' download pages, and the email links the PDF and the ZIP instead of 23 separate files. Re-uploading replaces the files for every buyer, past and future, since downloads are never cached.
 
 ## Pages
 

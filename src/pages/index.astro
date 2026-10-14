@@ -4,7 +4,7 @@ import BuyButton from '../components/BuyButton.astro';
 import Picture from '../components/Picture.astro';
 import LoopDiagram from '../components/LoopDiagram.astro';
 import { site, media, book, products, launch, socials, youtube, dogs, isSet, price } from '../config';
-import { parts, problems, drills, lines, plan, tracks } from '../data/book';
+import { parts, problems, drills, lines, plan, tracks, audiobook } from '../data/book';
 
 const check = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 
@@ -46,7 +46,7 @@ const faqs = [
   ['Does Stacy Jo use punishment?', 'Rewards lead, always. Stacy Jo is a practical, balanced trainer: on occasion she uses clear, low-level corrections, but never for fear, never for a growl, never when a dog is over threshold, and never in anger. Her test for every session: does it end with both of you calmer?'],
   ['Is this a replacement for my vet or a behaviorist?', 'No. The book is general education. If your dog has bitten someone, or their behavior has changed suddenly, please start with your veterinarian and a qualified behavior professional.'],
   ['What format is it?', 'You get the PDF right away, on the thank-you page and in your email. It reads well on phones, tablets, and computers. The bundle adds the audiobook.'],
-  ['Who narrates the audiobook?', 'It’s narrated with an AI-generated version of Stacy Jo’s own voice.'],
+  ['Who narrates the audiobook?', 'Delia, a natural-sounding AI voice. You hear the complete book, with the tables rewritten so they make sense out loud.'],
   ['Is checkout secure?', 'Yes. Payments are handled by Stripe. Your card details never touch this site.'],
   ['What if it’s not for me?', `Email ${site.email} within 14 days for a full refund.`],
 ];
@@ -262,11 +262,12 @@ const jsonld = [
       <div>
         <p class="label">Ebook + Audiobook</p>
         <h2 class="accent">Prefer to listen? Take the book on your walks.</h2>
-        <p class="lead">The complete book as an audiobook: {tracks.length} tracks, about 1 hour 50 minutes. Start a chapter at the front door, then practice the drill on the sidewalk.</p>
+        <p class="lead">The complete book as an audiobook: {tracks.length} tracks, {audiobook.runtime}. Start a chapter at the front door, then practice the drill on the sidewalk.</p>
         <ul class="checks">
           <li>Every chapter, plus the 7-Day Plan as its own track</li>
           <li>Tables rewritten for listening, so nothing gets lost</li>
           <li>MP3 files that play on any phone or computer</li>
+          <li>{audiobook.narrator}</li>
         </ul>
         <div class="btn-row audio-cta">
           <BuyButton product="bundle" variant="primary">Get the ebook + audiobook: ${price('bundle')}</BuyButton>
@@ -332,7 +333,7 @@ const jsonld = [
           <p class="price">{launch.active && <s>${products.bundle.price}</s>}<span>${price('bundle')}</span></p>
           <p class="plus-line">Everything in the ebook, plus:</p>
           <ul class="checks">
-            <li>The complete audiobook: {tracks.length} tracks, about 1 hour 50 minutes</li>
+            <li>The complete audiobook: {tracks.length} tracks, {audiobook.runtime}</li>
             <li>The 7-Day Plan as its own track</li>
             <li>MP3s for any phone or computer</li>
           </ul>

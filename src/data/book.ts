@@ -109,3 +109,9 @@ export const tracks = [
   ...parts.flatMap((p) => p.chapters.map((c) => `Chapter ${c.n}: ${c.title}`)),
   'Conclusion: Same Side', 'Bonus: The 7-Day Calm Together Plan', 'Closing credits',
 ];
+
+// Audiobook facts shown on the sales page. Runtime: 2h 1m 22s across 22 tracks.
+export const audiobook = {
+  runtime: 'just over 2 hours',
+  narrator: 'Narrated by Delia, a natural-sounding AI voice',
+};
