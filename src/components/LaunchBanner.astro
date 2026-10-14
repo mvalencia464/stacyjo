@@ -4,7 +4,7 @@ import { launch, isSet } from '../config';
 {launch.active && (
   <div class="launch" role="note">
     <p>
-      Launch week: use code <strong>{launch.code}</strong> for ${launch.amountOff} off{isSet(launch.endsLabel) && <> until {launch.endsLabel}</>}.
+      Save ${launch.amountOff} with code <strong>{launch.code}</strong>{isSet(launch.endsLabel) && <> until {launch.endsLabel}</>}.
       <a href="/#pricing">Get the book</a>
     </p>
   </div>

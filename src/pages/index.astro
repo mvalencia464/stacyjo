@@ -45,7 +45,7 @@ const faqs = [
   ['How long until I see a difference?', 'Most drills take 5 to 10 minutes. The 7-Day Plan gets you started in a week. Bigger challenges, like reactivity, take steady practice over several weeks. Every dog moves at their own pace.'],
   ['Does Stacy Jo use punishment?', 'Rewards lead, always. Stacy Jo is a practical, balanced trainer: on occasion she uses clear, low-level corrections, but never for fear, never for a growl, never when a dog is over threshold, and never in anger. Her test for every session: does it end with both of you calmer?'],
   ['Is this a replacement for my vet or a behaviorist?', 'No. The book is general education. If your dog has bitten someone, or their behavior has changed suddenly, please start with your veterinarian and a qualified behavior professional.'],
-  ['What format is it?', 'A PDF that reads well on phones, tablets, and computers. After checkout you land on a page with your download links, and we email the same links. The bundle adds the audiobook as MP3 files.'],
+  ['What format is it?', 'You get the PDF right away, on the thank-you page and in your email. It reads well on phones, tablets, and computers. The bundle adds the audiobook.'],
   ['Who narrates the audiobook?', 'It’s narrated with an AI-generated version of Stacy Jo’s own voice.'],
   ['Is checkout secure?', 'Yes. Payments are handled by Stripe. Your card details never touch this site.'],
   ['What if it’s not for me?', `Email ${site.email} within 14 days for a full refund.`],
@@ -84,7 +84,7 @@ const jsonld = [
       <div class="hero-copy">
         <p class="label">New book by Stacy Jo</p>
         <h1>Your dog feels your stress. <span class="hi">And your calm.</span></h1>
-        <p class="lead"><em>{book.title}</em> is a calm-first method for the stress loop between you and your dog, so walks, guests, and everyday life get easier for both of you.</p>
+        <p class="lead">Walks, guests, and the doorbell get easier when you calm your end of the leash first.</p>
         <div class="btn-row">
           <BuyButton product="ebook" variant="yellow">Get the book: ${price('ebook')}</BuyButton>
           <a class="btn btn--ghost" href="/free-chapter">Read a free chapter</a>
@@ -169,7 +169,7 @@ const jsonld = [
         <p class="label">Read a page</p>
         <h2 class="accent">The fix starts on your end of the leash.</h2>
         <p>Rosa learns a ten-second skill called the 3-Breath Reset. She practices it when nothing is happening, then with fake doorbells, then for real.</p>
-        <p>Two weeks later, the doorbell rings. What Diesel does next is the reason this chapter is the heart of the book.</p>
+        <p>Two weeks later, the doorbell rings. Read Chapter 4 free to see what Diesel does next.</p>
         <div class="btn-row">
           <a class="btn btn--primary" href="/free-chapter">Read Chapter 4 free</a>
           <a class="btn btn--outline" href="#pricing">Get the whole book</a>
@@ -182,7 +182,7 @@ const jsonld = [
   <section class="band band--mist" id="book">
     <div class="wrap">
       <div class="intro">
-        <h2 class="accent">One method. Six pillars. Seventeen short chapters.</h2>
+        <h2 class="accent">Seventeen short chapters. Each one ends with a drill.</h2>
         <p class="lead">Every chapter follows the same rhythm: the problem in words you’ve probably said out loud, what’s really going on, your dog’s side and your side, a drill, and one line to remember.</p>
       </div>
       <div class="toc">
@@ -267,7 +267,6 @@ const jsonld = [
           <li>Every chapter, plus the 7-Day Plan as its own track</li>
           <li>Tables rewritten for listening, so nothing gets lost</li>
           <li>MP3 files that play on any phone or computer</li>
-          <li>Narrated with an AI-generated version of Stacy Jo’s own voice</li>
         </ul>
         <div class="btn-row audio-cta">
           <BuyButton product="bundle" variant="primary">Get the ebook + audiobook: ${price('bundle')}</BuyButton>
@@ -325,7 +324,7 @@ const jsonld = [
             <li>Research notes and sources</li>
             <li>Instant download</li>
           </ul>
-          <BuyButton product="ebook" variant="outline">Get the ebook</BuyButton>
+          <BuyButton product="ebook" variant="outline">Get the book: ${price('ebook')}</BuyButton>
         </article>
         <article class="plan plan--best">
           <p class="tag">Best value</p>
@@ -336,9 +335,8 @@ const jsonld = [
             <li>The complete audiobook: {tracks.length} tracks, about 1 hour 50 minutes</li>
             <li>The 7-Day Plan as its own track</li>
             <li>MP3s for any phone or computer</li>
-            <li>Narrated with an AI version of Stacy Jo’s own voice</li>
           </ul>
-          <BuyButton product="bundle" variant="yellow">Get the bundle</BuyButton>
+          <BuyButton product="bundle" variant="yellow">Listen on your walks: ${price('bundle')}</BuyButton>
         </article>
       </div>
       {launch.active && <p class="center launch-note">Launch prices with code <strong>{launch.code}</strong>.</p>}
