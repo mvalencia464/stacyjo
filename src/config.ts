@@ -72,7 +72,8 @@ export const dogs = {
 };
 
 export const legal = {
-  updated: 'October 13, 2026',
+  updated: 'October 14, 2026',
+  refundsUpdated: 'October 13, 2026',
   hosting: 'Cloudflare',
   analytics: '', // e.g. 'Cloudflare Web Analytics' — leave empty if none
   governingLaw: '{{STATE_OR_COUNTRY}}',

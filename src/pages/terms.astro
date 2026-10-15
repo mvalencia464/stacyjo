@@ -2,18 +2,52 @@
 import Base from '../layouts/Base.astro';
 import { site, legal, book, isSet } from '../config';
 ---
-<Base title="Terms | Stacy Jo" description="Terms of use for stacyjo.com and The Leash Goes Both Ways.">
+<Base title="Terms | Stacy Jo" description="Terms for using stacyjo.com and The Leash Goes Both Ways, including the ebook and audiobook.">
   <section class="band"><div class="wrap prose">
     <h1>Terms</h1>
     <p class="fine">Last updated: {legal.updated}</p>
-    <h2>Your purchase</h2>
-    <p>Buying <em>{book.title}</em> gives you a personal, non-transferable license to read and use it. Please don’t share, resell, or post the paid files. The free chapter may be shared freely in its complete, unaltered form.</p>
+    <p>These terms cover stacyjo.com and <em>{book.title}</em>, including the ebook and the audiobook. Buying, downloading, or using them means you agree. If you don’t agree, don’t buy or use them.</p>
+
+    <h2>Who you’re buying from</h2>
+    <p>{site.name} sells the book at {site.url.replace('https://', '')}. Reach us at <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+    <p>You need to be 18 or older to buy. The book is general education for dog owners. It isn’t a product for children.</p>
+
+    <h2>Your license</h2>
+    <p>Buying <em>{book.title}</em> gives you a personal, non-transferable license to read it, listen to it, and print one copy for your own use. You are not buying the copyright.</p>
+    <p>Please don’t share, resell, upload, or post the paid files. Don’t give your download link to anyone else. The link keeps working, and anyone who has it can download the files.</p>
+    <p>The free chapter may be shared freely, as long as it stays complete and unaltered.</p>
+
+    <h2>The audiobook</h2>
+    <p>The audiobook is read by Delia, an AI voice. It is not a recording of {site.name} speaking. The narration follows the book. Tables are rewritten so they make sense when read aloud.</p>
+
+    <h2>Delivery and price</h2>
+    <p>After payment, your files are on the thank-you page and in an email from {site.email}. Save that page. If the email doesn’t arrive, check spam, or write to us with your Stripe receipt and we will send the links.</p>
+    <p>We may correct the files after you buy. Your download links serve the current version.</p>
+    <p>Prices are in US dollars and can change. A discount code applies only when it is offered and accepted at checkout. Stripe processes the payment. Your card details never touch this site.</p>
+
+    <h2>Refunds</h2>
+    <p>The ebook and the ebook + audiobook bundle include a 14-day money-back guarantee. Email {site.email} with your order number within 14 days for a full refund. The details are on the <a href="/refunds">refunds</a> page.</p>
+
     <h2>Not veterinary advice</h2>
-    <p>The book and this site offer general education about dog behavior and training, not veterinary advice or a behavioral diagnosis. You’re responsible for your dog’s safety and for seeking professional help when needed. If your dog has bitten someone or their behavior has changed suddenly, please see your veterinarian and a qualified behavior professional.</p>
+    <p>The book and this site are general education about dog behavior and training. They are not veterinary advice, a behavioral diagnosis, or a substitute for your veterinarian or a qualified behavior professional.</p>
+    <p>You are responsible for your dog’s safety, for the safety of people around your dog, and for getting professional help when you need it. If your dog has bitten someone, or their behavior has changed suddenly, start with your veterinarian.</p>
+    <p>Training results vary. The book cannot promise a particular outcome for you or your dog.</p>
+
+    <h2>The website</h2>
+    <p>The site is provided as it is. We may change or remove pages. We don’t promise that the site, checkout, or download links will be available every moment, though we will help if a link you paid for stops working.</p>
+    <p>Links to YouTube, Instagram, TikTok, Facebook, and Pinterest leave this site. Those services have their own terms.</p>
+    <p>How we handle your email and order details is described in the <a href="/privacy">privacy</a> page.</p>
+
     <h2>Liability</h2>
-    <p>Content is provided “as is.” To the extent the law allows, Stacy Jo isn’t liable for indirect or consequential damages arising from use of this site or the book.</p>
+    <p>To the extent the law allows, {site.name} isn’t liable for indirect or consequential damages arising from use of this site or the book, including injury, loss, or a training result you hoped for and did not get.</p>
+    <p>Nothing in these terms limits liability that the law does not allow us to limit, including liability for fraud or for death or personal injury caused by negligence where such a limit is prohibited.</p>
+
+    <h2>Changes</h2>
+    <p>If these terms change, we’ll update this page and the date at the top. The terms in place when you buy apply to that purchase. Using the site after a change means you accept the updated terms for your use of the site.</p>
+
     {isSet(legal.governingLaw) && (<><h2>Governing law</h2><p>These terms are governed by the laws of {legal.governingLaw}.</p></>)}
+
     <h2>Contact</h2>
-    <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+    <p>Questions about an order, a download, or these terms: <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
   </div></section>
 </Base>

@@ -2,29 +2,64 @@
 import Base from '../layouts/Base.astro';
 import { site, legal } from '../config';
 ---
-<Base title="Privacy | Stacy Jo" description="How stacyjo.com handles your information.">
+<Base title="Privacy | Stacy Jo" description="What stacyjo.com collects when you buy the book or request the free chapter, and the choices you have.">
   <section class="band"><div class="wrap prose">
     <h1>Privacy</h1>
     <p class="fine">Last updated: {legal.updated}</p>
+    <p>This page explains what stacyjo.com collects, why we collect it, and the choices you have.</p>
+
     <h2>Who we are</h2>
-    <p>This site is run by Stacy Jo (stacyjo.com). Questions: <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
-    <h2>What we collect</h2>
-    <p>Your email address (and first name, if you give it) when you sign up for the free chapter or emails, and purchase details when you buy. We never see or store payment card numbers. Stripe processes payments.</p>
+    <p>This site is run by Stacy Jo. It sells the ebook <em>The Leash Goes Both Ways</em> and an ebook + audiobook bundle, and it offers a free chapter. There is no account and no login.</p>
+    <p>Questions: <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+
+    <h2>What you give us</h2>
+    <p><strong>When you buy.</strong> Checkout happens on Stripe. Stripe collects your email and the payment details it needs to charge you. We receive your email, which product you bought, the amount, and a payment reference. Your card number never touches this site, and we do not store it.</p>
+    <p><strong>When you ask for the free chapter.</strong> If you use the signup form, Kit stores your email, and your first name if you give one, then sends the chapter. If you email us instead, we use that address to reply and to send the chapter.</p>
+    <p><strong>When you write to us.</strong> We keep your message so we can help, including refund requests and missing downloads.</p>
+
+    <h2>What is collected automatically</h2>
+    <p>{legal.hosting} hosts the site. To deliver pages and block abuse, it processes ordinary connection details: your IP address, browser type, and the page you requested. We do not use that information to build an advertising profile.</p>
+    <p>{legal.analytics
+      ? `${legal.analytics} counts visits. It is privacy-friendly and does not use advertising cookies.`
+      : 'This site does not use analytics cookies or advertising cookies.'}</p>
+    <p>Stripe sets its own cookies on the checkout page. Kit may set its own cookies on the free-chapter form. Those cookies are covered by their policies, linked below.</p>
+
     <h2>How we use it</h2>
-    <p>To deliver what you asked for, send emails you signed up for, answer support questions, and improve the site.</p>
-    <h2>Service providers</h2>
     <ul>
-      <li>Stripe: checkout and payments</li>
-      <li>Kit: email delivery</li>
-      <li>{legal.hosting}: website hosting and image delivery</li>
-      <li>{legal.analytics ? `${legal.analytics}: privacy-friendly, cookieless analytics` : 'No analytics or advertising cookies are used on this site.'}</li>
+      <li>To deliver the files you bought, on your thank-you page and by email from {site.email}</li>
+      <li>To send the free chapter, and any emails you asked for</li>
+      <li>To answer questions and issue refunds</li>
+      <li>To record that your download email went out, so we do not send a second copy</li>
+      <li>To keep the site working and to block abuse</li>
     </ul>
-    <p>Each provider processes data under its own privacy policy. We don’t sell your information.</p>
+    <p>We do not sell your information, and we do not share it for advertising.</p>
+
+    <h2>Who else handles it</h2>
+    <ul>
+      <li><a href="https://stripe.com/privacy" rel="noopener" target="_blank">Stripe</a> processes payments and keeps the order record.</li>
+      <li><a href="https://kit.com/privacy" rel="noopener" target="_blank">Kit</a> stores free-chapter signups and sends those emails, when you use the form.</li>
+      <li><a href="https://www.cloudflare.com/privacypolicy/" rel="noopener" target="_blank">{legal.hosting}</a> hosts the site, stores the download files, and sends purchase emails from {site.email}.</li>
+    </ul>
+    <p>Each company processes data under its own privacy policy. They may store it in the United States.</p>
+
+    <h2>Your download link</h2>
+    <p>The link in your receipt email is private. It includes a code from your Stripe checkout. Anyone with that link can download your files, and the thank-you page shows the email address from the order. Treat the link like a receipt, and don’t post it. It does not expire.</p>
+
+    <h2>How long we keep it</h2>
+    <p>Stripe keeps the purchase record. We use it for support, refunds, and tax records, and we keep it for as long as those needs and the law require.</p>
+    <p>We store a short note that your download email was sent, tied to that checkout, so a duplicate is not sent. It is not a second copy of your card details.</p>
+    <p>Messages you send to {site.email} stay long enough to help you and to keep a record of refunds. A free-chapter signup stays with Kit until you unsubscribe or ask us to delete it.</p>
+
     <h2>Your choices</h2>
-    <p>Unsubscribe from any email with one click. To see or delete the information we hold about you, email <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+    <p>Emails about the free chapter include an unsubscribe link. One click stops those emails. The download email for a purchase is not marketing, so it does not include that link. It exists to deliver the files you bought.</p>
+    <p>To see, correct, or delete the information we hold, email <a href={`mailto:${site.email}`}>{site.email}</a> from the address you used. We will delete what we hold and pass the request to Stripe or Kit where their tools allow it. Records that tax or accounting rules require us to keep may stay.</p>
+    <p>If you live in California or another state with a privacy law, those same requests cover your right to know, delete, and correct. We will not treat you differently for asking. We do not sell personal information, and we do not share it for cross-context behavioral advertising.</p>
+    <p>If you are in the United Kingdom or the European Economic Area, you can also ask us to restrict or object to certain uses, and you can complain to your local data protection authority. We use purchase details to deliver the book you bought. We use a free-chapter signup because you asked for the chapter. We use basic site logs to run and protect the site.</p>
+
     <h2>Children</h2>
-    <p>This site isn’t directed to children under 13.</p>
+    <p>This site isn’t directed to children under 13, and we don’t knowingly collect their information. If you believe we have, email <a href={`mailto:${site.email}`}>{site.email}</a> and we will delete it.</p>
+
     <h2>Changes</h2>
-    <p>If this policy changes, we’ll update this page and the date above.</p>
+    <p>If this policy changes, we’ll update this page and the date at the top. How purchases work is also covered in the <a href="/terms">terms</a>.</p>
   </div></section>
 </Base>
