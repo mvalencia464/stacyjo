@@ -1,8 +1,9 @@
-import { fulfill, type Env } from '../lib/order';
+import { eventAlreadyHandled, fulfill, rememberEvent, sendDownloadEmailWithRetry, type Env } from '../lib/order';
 
 interface PagesContext {
   request: Request;
   env: Env;
+  waitUntil?: (promise: Promise<unknown>) => void;
 }
 
 function timingSafeEqual(a: string, b: string): boolean {
@@ -38,18 +39,28 @@ export async function onRequestPost(context: PagesContext): Promise<Response> {
   const header = context.request.headers.get('stripe-signature') ?? '';
   if (!(await signedByStripe(payload, header, secret))) return new Response('Invalid signature.', { status: 400 });
 
-  let event: { type?: string; data?: { object?: { id?: string } } };
+  let event: { id?: string; type?: string; data?: { object?: { id?: string } } };
   try {
-    event = JSON.parse(payload) as { type?: string; data?: { object?: { id?: string } } };
+    event = JSON.parse(payload) as { id?: string; type?: string; data?: { object?: { id?: string } } };
   } catch {
     return new Response('Invalid payload.', { status: 400 });
   }
-  if (event.type === 'checkout.session.completed' && event.data?.object?.id) {
+  const sessionId = event.data?.object?.id;
+  if (event.type === 'checkout.session.completed' && sessionId) {
+    if (event.id && (await eventAlreadyHandled(context.env, event.id))) {
+      return Response.json({ received: true });
+    }
     try {
-      const result = await fulfill(context.env, event.data.object.id, 'webhook');
-      // If the email failed, ask Stripe to retry. The R2 marker prevents duplicate emails.
-      if (result.status === 200 && result.body.emailStatus === 'failed') {
-        return new Response('Email failed; retry.', { status: 500 });
+      const result = await fulfill(context.env, sessionId, 'webhook');
+      if (result.status !== 200) {
+        console.error('Webhook fulfill skipped', sessionId, result.status);
+        return Response.json({ received: true });
+      }
+      if (event.id) await rememberEvent(context.env, event.id, sessionId);
+      if (result.body.emailStatus === 'pending') {
+        const retry = sendDownloadEmailWithRetry(context.env, sessionId);
+        if (context.waitUntil) context.waitUntil(retry);
+        else console.error('Download email retry not scheduled', sessionId, 'waitUntil missing');
       }
     } catch (error) {
       console.error('Webhook fulfill failed', error instanceof Error ? error.message : 'unknown');
