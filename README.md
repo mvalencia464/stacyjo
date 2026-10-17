@@ -57,7 +57,7 @@ In Stripe, add a webhook endpoint for `checkout.session.completed`:
 
 `https://stacyjo.com/api/stripe-webhook`
 
-Put its signing secret in the Pages project as `STRIPE_WEBHOOK_SECRET`. `STRIPE_SECRET_KEY` is already set. The thank-you page still sends the email if the webhook is not in place yet.
+Put its signing secret in the Pages project as `STRIPE_WEBHOOK_SECRET`. `STRIPE_SECRET_KEY` is already set. The thank-you page still sends the email if the webhook is not in place yet. A failed download email is logged and retried in the background; it does not fail the webhook.
 
 Pages cannot send email itself. A Worker named `stacyjo-mailer` sends from hello@stacyjo.com, and the Pages project calls it through the `MAILER` service binding in `wrangler.jsonc`. Downloads still appear on the thank-you page if that binding is missing.
 
@@ -87,7 +87,7 @@ npm run deploy
 
 ## Delivery details
 
-- **One email per order.** The Stripe webhook sends the download email. A small marker in R2 (`orders/<session>/download-email.json`) records it, so webhook retries and page reloads never send a second one, including on 100%-off orders. The thank-you page only sends the email itself if none has gone out two minutes after checkout.
+- **One email per order.** The Stripe webhook records the paid session (`orders/<session>/order.json` and `orders/events/<event>.json`), responds, then sends the download email in the background. A small marker in R2 (`orders/<session>/download-email.json`) records it, so webhook retries and page reloads never send a second one, including on 100%-off orders (no PaymentIntent, `amount_total` 0). The thank-you page only sends the email itself if none has gone out two minutes after checkout.
 - **Matching orders to products.** For bulletproof matching, set `STRIPE_LINK_EBOOK` and `STRIPE_LINK_BUNDLE` in `wrangler.jsonc` to the Payment Link IDs (`plink_...`). Without them, orders match by product name, then by list price.
 - **Audiobook files.** Run `node scripts/upload-audiobook.mjs src/resources` (add `--dry-run` first to check). It finds all 22 MP3s by track number, uploads each to the key the site serves, and uploads one ZIP of every track. The ZIP appears first on bundle buyers' download pages, and the email links the PDF and the ZIP instead of 23 separate files. Re-uploading replaces the files for every buyer, past and future, since downloads are never cached.
 

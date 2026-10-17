@@ -18,6 +18,8 @@ interface StripeSession {
   status: string | null;
   payment_status: string;
   amount_subtotal: number | null;
+  /** After discounts. A 100% promo code leaves this at 0 and payment_intent null. */
+  amount_total?: number | null;
   payment_link: string | null;
   customer_details: { email?: string | null } | null;
   payment_intent: string | { id: string; metadata?: Record<string, string> } | null;
@@ -111,12 +113,69 @@ function escapeHtml(value: string): string {
  * Markers live under orders/, which no download link can reach.
  */
 const markerKey = (sessionId: string) => `orders/${sessionId}/download-email.json`;
+const orderKey = (sessionId: string) => `orders/${sessionId}/order.json`;
+const eventKey = (eventId: string) => `orders/events/${eventId}.json`;
+
+/** First attempt immediately, then two more. Short gaps stay inside a waitUntil budget. */
+const EMAIL_RETRY_DELAYS_MS = [0, 400, 1200];
+
+interface EmailMarker {
+  sentAt?: string;
+  sendingAt?: string;
+}
+
+async function readJson<T>(env: Env, key: string): Promise<T | null> {
+  const object = await env.DOWNLOADS.get(key);
+  if (!object) return null;
+  try {
+    return JSON.parse(await object.text()) as T;
+  } catch {
+    return null;
+  }
+}
+
+/** Create the object only when it is absent. Returns false when another request already wrote it. */
+async function putIfAbsent(env: Env, key: string, body: string): Promise<boolean> {
+  const existing = await env.DOWNLOADS.head(key);
+  if (existing) return false;
+  const stored = await env.DOWNLOADS.put(key, body, {
+    onlyIf: { etagDoesNotMatch: '*' },
+    httpMetadata: { contentType: 'application/json' },
+  });
+  return stored !== null;
+}
 
 async function emailAlreadySent(env: Env, session: StripeSession): Promise<boolean> {
-  if ((await env.DOWNLOADS.head(markerKey(session.id))) !== null) return true;
+  const marker = await readJson<EmailMarker>(env, markerKey(session.id));
+  if (marker?.sentAt) return true;
   // Orders emailed before this change were flagged on the PaymentIntent instead.
+  // A 100%-off Checkout Session has no PaymentIntent, so the R2 marker is the record.
   const intent = session.payment_intent;
   return typeof intent === 'object' && intent?.metadata?.download_email_sent === '1';
+}
+
+async function recordOrder(env: Env, session: StripeSession, product: Product): Promise<void> {
+  const body = JSON.stringify({
+    sessionId: session.id,
+    product,
+    email: session.customer_details?.email ?? null,
+    amountSubtotal: session.amount_subtotal,
+    amountTotal: session.amount_total ?? null,
+    recordedAt: new Date().toISOString(),
+  });
+  await putIfAbsent(env, orderKey(session.id), body);
+}
+
+export async function eventAlreadyHandled(env: Env, eventId: string): Promise<boolean> {
+  return (await env.DOWNLOADS.head(eventKey(eventId))) !== null;
+}
+
+export async function rememberEvent(env: Env, eventId: string, sessionId: string): Promise<void> {
+  await putIfAbsent(env, eventKey(eventId), JSON.stringify({
+    eventId,
+    sessionId,
+    recordedAt: new Date().toISOString(),
+  }));
 }
 
 async function sendDownloadEmail(env: Env, session: StripeSession, product: Product, files: DownloadFile[]): Promise<boolean> {
@@ -150,6 +209,18 @@ async function sendDownloadEmail(env: Env, session: StripeSession, product: Prod
 ${tracksNote ? `<p>${escapeHtml(tracksNote)}</p>` : ''}
 <p>Save that page. The links on it are yours. If anything is missing, email <a href="mailto:hello@stacyjo.com">hello@stacyjo.com</a>.</p>`;
 
+  const key = markerKey(session.id);
+  const existing = await readJson<EmailMarker>(env, key);
+  if (existing?.sentAt) return true;
+  if (existing?.sendingAt && Date.now() - Date.parse(existing.sendingAt) < 60_000) return false;
+  if (existing) await env.DOWNLOADS.delete(key);
+
+  const claimed = await putIfAbsent(env, key, JSON.stringify({ sendingAt: new Date().toISOString() }));
+  if (!claimed) {
+    const again = await readJson<EmailMarker>(env, key);
+    return !!again?.sentAt;
+  }
+
   try {
     const sent = await env.MAILER.fetch('https://stacyjo-mailer/send', {
       method: 'POST',
@@ -157,18 +228,51 @@ ${tracksNote ? `<p>${escapeHtml(tracksNote)}</p>` : ''}
       body: JSON.stringify({ to: email, subject: 'Your download: The Leash Goes Both Ways', text, html }),
     });
     if (!sent.ok) {
-      console.error('Download email failed', sent.status);
+      console.error('Download email failed', session.id, sent.status);
+      await env.DOWNLOADS.delete(key);
       return false;
     }
   } catch (error) {
-    console.error('Download email failed', error instanceof Error ? error.message : 'unknown');
+    console.error('Download email failed', session.id, error instanceof Error ? error.message : 'unknown');
+    await env.DOWNLOADS.delete(key);
     return false;
   }
 
-  await env.DOWNLOADS.put(markerKey(session.id), JSON.stringify({ sentAt: new Date().toISOString() }), {
+  await env.DOWNLOADS.put(key, JSON.stringify({ sentAt: new Date().toISOString() }), {
     httpMetadata: { contentType: 'application/json' },
   });
   return true;
+}
+
+/**
+ * Sends the download email without blocking the webhook response.
+ * Safe to run more than once for the same session: the R2 marker stops a second send.
+ */
+export async function sendDownloadEmailWithRetry(env: Env, sessionId: string): Promise<void> {
+  for (let attempt = 0; attempt < EMAIL_RETRY_DELAYS_MS.length; attempt++) {
+    const wait = EMAIL_RETRY_DELAYS_MS[attempt];
+    if (wait > 0) await new Promise((resolve) => setTimeout(resolve, wait));
+    try {
+      const session = await getSession(env, sessionId);
+      if (!session || !isPaid(session)) return;
+      if (await emailAlreadySent(env, session)) return;
+      if (!session.customer_details?.email || !env.MAILER) {
+        console.error('Download email skipped', sessionId, !env.MAILER ? 'MAILER binding missing' : 'customer email missing');
+        return;
+      }
+      const product = productOf(session, env);
+      if (!product) {
+        console.error('Download email skipped', sessionId, 'product unmatched');
+        return;
+      }
+      const files = await availableFiles(env, product);
+      if (await sendDownloadEmail(env, session, product, files)) return;
+      console.error('Download email failed', sessionId, `attempt ${attempt + 1}`);
+    } catch (error) {
+      console.error('Download email failed', sessionId, error instanceof Error ? error.message : 'unknown');
+    }
+  }
+  console.error('Download email retries exhausted', sessionId);
 }
 
 /**
@@ -185,15 +289,25 @@ export async function fulfill(env: Env, sessionId: string, source: Source) {
   if (!product) return { status: 409 as const, error: 'We could not match this payment to a book. Email hello@stacyjo.com.' };
 
   const files = await availableFiles(env, product);
+  await recordOrder(env, session, product);
 
   let emailStatus: EmailStatus;
   if (await emailAlreadySent(env, session)) {
     emailStatus = 'sent';
   } else if (!session.customer_details?.email || !env.MAILER) {
+    if (source === 'webhook' && !session.customer_details?.email) {
+      console.error('Download email skipped', session.id, 'customer email missing');
+    }
+    if (source === 'webhook' && !env.MAILER) {
+      console.error('Download email skipped', session.id, 'MAILER binding missing');
+    }
     emailStatus = 'none';
+  } else if (source === 'webhook') {
+    // The webhook records the order, responds, then sends in waitUntil.
+    emailStatus = 'pending';
   } else {
     const ageSeconds = Date.now() / 1000 - session.created;
-    const shouldSend = source === 'webhook' || ageSeconds > PAGE_FALLBACK_AFTER_SECONDS;
+    const shouldSend = ageSeconds > PAGE_FALLBACK_AFTER_SECONDS;
     if (shouldSend) emailStatus = (await sendDownloadEmail(env, session, product, files)) ? 'sent' : 'failed';
     else emailStatus = 'pending';
   }

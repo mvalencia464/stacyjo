@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "test": "esbuild functions/api/stripe-webhook.test.ts --bundle --platform=node --format=esm --outfile=/tmp/stripe-webhook.test.mjs && node --test /tmp/stripe-webhook.test.mjs",
     "preview": "astro preview",
     "deploy": "npm run build && wrangler pages deploy"
   },
